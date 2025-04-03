@@ -107,13 +107,13 @@ class CustomersController extends Controller
             ]);
 
             $addressId = $cliente->address_id;
-            if (!empty($validated['city_id'])) {
+            if (!empty($addressId)) {
                 $address = Address::updateOrCreate(
                     ['id' => $addressId],
                     [
                         'address' => $validated['address'] ?? $cliente->address->address,
                         'neighborhood' => $validated['neighborhood'] ?? $cliente->address->neighborhood,
-                        'city_id' => $validated['city_id']
+                        'city_id' => $validated['city_id'] ?? $cliente->address->city_id
                     ]
                 );
                 $addressId = $address->id;
@@ -129,12 +129,19 @@ class CustomersController extends Controller
 
             DB::commit();
 
-            return response()->json($cliente, 200);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Cliente cadastrado com sucesso'
+                ],
+                200
+            );
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             DB::rollBack();
+            dd($e);
             return response()->json(['status' => 'error', 'message' => 'Erro inesperado'], 500);
         }
     }
