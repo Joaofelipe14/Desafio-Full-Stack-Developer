@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Jobs\EnviarEmailBoasVindasJob;
 use App\Models\Address;
+use App\Models\Clients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Customers;
 use Exception;
 
-class CustomersController extends Controller
+class ClientController extends Controller
 {
     public function index()
     {
-        $customers = Customers::paginate(5);
+        $clients = Clients::paginate(5);
 
-        return response()->json($customers, 200);
+        return response()->json($clients, 200);
     }
 
     public function store(Request $request)
@@ -45,7 +45,7 @@ class CustomersController extends Controller
                 $addressId = $address->id;
             }
 
-            $cliente = Customers::create([
+            $cliente = Clients::create([
                 'name' => $validated['name'],
                 'cpf' => $validated['cpf'],
                 'email' => $validated['email'],
@@ -76,7 +76,7 @@ class CustomersController extends Controller
 
     public function show($id)
     {
-        $cliente = Customers::with(['address.city.state'])->find($id);
+        $cliente = Clients::with(['address.city.state'])->find($id);
 
         if (!$cliente) {
             return response()->json(['erro' => 'Cliente não encontrado'], 404);
@@ -90,7 +90,7 @@ class CustomersController extends Controller
         DB::beginTransaction();
 
         try {
-            $cliente = Customers::find($id);
+            $cliente = Clients::find($id);
 
             if (!$cliente) {
                 return response()->json(['erro' => 'Cliente não encontrado'], 404);
@@ -149,7 +149,7 @@ class CustomersController extends Controller
 
     public function destroy($id)
     {
-        $cliente = Customers::find($id);
+        $cliente = Clients::find($id);
 
         if (!$cliente) {
             return response()->json(['erro' => 'Cliente não encontrado'], 404);

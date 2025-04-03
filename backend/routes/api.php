@@ -5,7 +5,7 @@ use App\Http\Controllers\HuggyAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HuggyWebhookController;
 use App\Http\Controllers\StateController;
 
@@ -27,9 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cities', [CityController::class, 'index']);
 
     // Rotas para Clientes
-    Route::get('/customers', [CustomersController::class, 'index']);
-    Route::post('/customers', [CustomersController::class, 'store']);
-    Route::get('/customers/{id}', [CustomersController::class, 'show']);
-    Route::put('/customers/{id}', [CustomersController::class, 'update']);
-    Route::delete('/customers/{id}', [CustomersController::class, 'destroy']);
+    Route::get('/customers', [ClientController::class, 'index']);
+    Route::post('/customers', [ClientController::class, 'store']);
+    Route::get('/customers/{id}', [ClientController::class, 'show']);
+    Route::put('/customers/{id}', [ClientController::class, 'update']);
+    Route::delete('/customers/{id}', [ClientController::class, 'destroy']);
 });

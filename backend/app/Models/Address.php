@@ -17,8 +17,8 @@ class Address extends Model
         return $this->belongsTo(Cities::class);
     }
 
-    public function customers()
+    public function clients()
     {
-        return $this->hasMany(Customers::class);
+        return $this->hasMany(Clients::class);
     }
 }

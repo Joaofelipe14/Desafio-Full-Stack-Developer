@@ -33,8 +33,7 @@ class EnviarWebhookClienteCriado implements ShouldQueue
                 'email' => $this->cliente->email,
                 'birth_date' => $this->cliente->birth_date,
                 'city_id' => $this->cliente->city_id,
-                'criado_em' => $this->cliente->created_at,
-                'token' => $token
+                'created_at' => $this->cliente->created_at,
             ]);
 
             if ($response->failed()) {

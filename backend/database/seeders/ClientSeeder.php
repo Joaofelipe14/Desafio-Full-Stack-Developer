@@ -4,11 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Address;
 use App\Models\Cities;
-use App\Models\Customers;
+use App\Models\Clients;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
-class CustomerSeeder extends Seeder
+class ClientSeeder extends Seeder
 {
     public function run()
     {
@@ -25,7 +25,7 @@ class CustomerSeeder extends Seeder
             ]);
 
             // Criando o cliente e associando ao endereço
-            Customers::create([
+            Clients::create([
                 'name' => $faker->name,
                 'url_perfil' => $faker->imageUrl(200, 200, 'people'),
                 'mobile' => $faker->areaCode() . '9' . $faker->numerify('########'),
