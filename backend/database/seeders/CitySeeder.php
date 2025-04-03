@@ -1,9 +1,9 @@
 <?php
 namespace Database\Seeders;
 
+use App\Models\Cities;
 use Illuminate\Database\Seeder;
-use App\Models\City;
-use App\Models\State;
+use App\Models\States;
 
 class CitySeeder extends Seeder
 {
@@ -40,9 +40,9 @@ class CitySeeder extends Seeder
         ];
 
         foreach ($capitais as $capital) {
-            $estado = State::where('uf', $capital['uf'])->first();
+            $estado = States::where('uf', $capital['uf'])->first();
             if ($estado) {
-                City::create([
+                Cities::create([
                     'name' => $capital['name'],
                     'state_id' => $estado->id
                 ]);

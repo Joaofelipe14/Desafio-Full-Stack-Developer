@@ -2,8 +2,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Estado;
-use App\Models\State;
+use App\Models\States;
 
 class StateSeeder extends Seeder
 {
@@ -39,6 +38,6 @@ class StateSeeder extends Seeder
             ['name' => 'Tocantins', 'uf' => 'TO']
         ];
 
-        State::insert($estados);
+        States::insert($estados);
     }
 }

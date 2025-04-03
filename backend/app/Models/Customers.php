@@ -10,10 +10,10 @@ class Customers extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'cpf', 'email', 'birth_date','url_perfil', 'city_id'];
+    protected $fillable = ['name', 'cpf', 'email', 'birth_date','url_perfil', 'address_id'];
 
-    public function city()
+    public function address()
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(Address::class);
     }
 }

@@ -21,10 +21,10 @@ Route::post('/weebhook', [HuggyWebhookController::class, 'receberWebhook']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/estados', [StateController::class, 'index']);
+    Route::get('/states', [StateController::class, 'index']);
 
     // Rotas para Cidades
-    Route::get('/citys', [CityController::class, 'index']);
+    Route::get('/cities', [CityController::class, 'index']);
 
     // Rotas para Clientes
     Route::get('/customers', [CustomersController::class, 'index']);

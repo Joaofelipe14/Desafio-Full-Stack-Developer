@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email', 100)->unique();
             $table->date('birth_date')->nullable();
             $table->string('url_perfil')->nullable();
-            $table->foreignId('city_id')->constrained('citys')->onDelete('cascade')->nullable();;
+            $table->foreignId('address_id')->nullable()->constrained('address')->onDelete('cascade');
             $table->timestamps();
 
         });
