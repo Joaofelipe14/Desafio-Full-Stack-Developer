@@ -12,7 +12,7 @@ class HuggyWebhookController extends Controller
     {
         Log::info('Webhook recebido:', $request->all());
 
-        if ($request->input('token') !== '60ca90a27c00abc3924649336d1cd5a4') {
+        if ($request->input('token') !== env('HUGGY_CLIENT_ID')) {
             return response()->json(['erro' => 'Token inválido'], 403);
         }
 
@@ -36,6 +36,8 @@ class HuggyWebhookController extends Controller
             }
         }
 
-        return response('60ca90a27c00abc3924649336d1cd5a4');
+        $tokenWeebhook =env('HUGGY_CLIENT_ID');
+
+        return response( $tokenWeebhook );
     }
 }
