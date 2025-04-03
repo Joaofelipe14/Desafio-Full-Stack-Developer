@@ -87,8 +87,6 @@ class CustomersController extends Controller
 
     public function update(Request $request, $id)
     {
-
-
         DB::beginTransaction();
 
         try {
@@ -98,20 +96,45 @@ class CustomersController extends Controller
                 return response()->json(['erro' => 'Cliente não encontrado'], 404);
             }
 
-            $request->validate([
+            $validated = $request->validate([
                 'name' => 'sometimes|string|max:255',
                 'cpf' => 'sometimes|string|size:11|unique:customers,cpf,' . $id,
                 'email' => 'sometimes|email|unique:customers,email,' . $id,
                 'birth_date' => 'sometimes|date',
-                'city_id' => 'sometimes|exists:citys,id'
+                'city_id' => 'sometimes|exists:cities,id',
+                'address' => 'sometimes|string|max:255',
+                'neighborhood' => 'sometimes|string|max:255',
             ]);
 
-            $cliente->update($request->all());
+            $addressId = $cliente->address_id;
+            if (!empty($validated['city_id'])) {
+                $address = Address::updateOrCreate(
+                    ['id' => $addressId],
+                    [
+                        'address' => $validated['address'] ?? $cliente->address->address,
+                        'neighborhood' => $validated['neighborhood'] ?? $cliente->address->neighborhood,
+                        'city_id' => $validated['city_id']
+                    ]
+                );
+                $addressId = $address->id;
+            }
+
+            $cliente->update([
+                'name' => $validated['name'] ?? $cliente->name,
+                'cpf' => $validated['cpf'] ?? $cliente->cpf,
+                'email' => $validated['email'] ?? $cliente->email,
+                'birth_date' => $validated['birth_date'] ?? $cliente->birth_date,
+                'address_id' => $addressId,
+            ]);
+
+            DB::commit();
 
             return response()->json($cliente, 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Erro inesperado'], 500);
         }
     }
