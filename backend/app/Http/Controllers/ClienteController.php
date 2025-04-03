@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\EnviarEmailBoasVindasJob;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
 use Exception;
@@ -26,10 +27,15 @@ class ClienteController extends Controller
                 'cidade_id' => 'required|exists:cidades,id'
             ]);
 
+            $cliente = Cliente::create($validated);
+
+            EnviarEmailBoasVindasJob::dispatch($cliente)
+                ->delay(now()->addMinutes(2));
+    
             return response()->json([
                 'status' => 'success',
                 'message' => 'Cliente cadastrado com sucesso',
-                'data' => Cliente::create($validated)
+                'data' => $cliente 
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Cidade;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
