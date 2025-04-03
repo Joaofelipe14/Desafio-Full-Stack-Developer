@@ -4,12 +4,16 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CidadeController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\HuggyAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
 
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/huggy/auth', [HuggyAuthController::class, 'redirectToHuggy']);
+Route::get('/huggy/auth/callback', [HuggyAuthController::class, 'handleCallback']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
