@@ -20,7 +20,7 @@ class HuggyWebhookController extends Controller
             foreach ($request->messages['createdCustomer'] as $clienteData) {
                 try {
                     Cliente::create([
-                        'nome' => $clienteData['name'],
+                        'name' => $clienteData['name'],
                         'telefone' => $clienteData['mobile'] ?? null,
                         'email' => $clienteData['email'],
                         'foto' => $clienteData['photo'] ?? null,

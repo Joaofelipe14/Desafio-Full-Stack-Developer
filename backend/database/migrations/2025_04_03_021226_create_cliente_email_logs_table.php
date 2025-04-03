@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('cliente_email_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cliente_id')->constrained()->cascadeOnDelete();
-            $table->string('tipo');
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->string('type');
             $table->string('status');
-            $table->timestamp('enviado_em');
+            $table->timestamp('sent_in');
             $table->timestamps();
         });
     }

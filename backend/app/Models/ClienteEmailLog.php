@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class ClienteEmailLog extends Model
 {
     protected $fillable = [
-        'cliente_id',
-        'tipo',
+        'customer_id',
+        'type',
         'status',
-        'enviado_em'
+        'sent_in'
     ];
 
-    public function cliente()
+    public function customers()
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsTo(customers::class);
     }
 }

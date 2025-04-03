@@ -5,23 +5,25 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Cliente;
 use App\Models\Cidade;
+use App\Models\City;
+use App\Models\Customers;
 use Faker\Factory as Faker;
 
-class ClienteSeeder extends Seeder
+class CustomerSeeder extends Seeder
 {
     public function run()
     {
         $faker = Faker::create('pt_BR');
-        $cidadeIds = Cidade::pluck('id')->toArray();
+        $cidadeIds = City::pluck('id')->toArray();
 
         for ($i = 0; $i < 10; $i++) {
-            Cliente::create([
-                'nome' => $faker->name,
+            Customers::create([
+                'name' => $faker->name,
                 'url_perfil' => $faker->imageUrl(200, 200, 'people'),
                 'cpf' => $faker->unique()->cpf(false),
                 'email' => $faker->unique()->email,
-                'data_nascimento' => $faker->date(),
-                'cidade_id' => $faker->randomElement($cidadeIds),
+                'birth_date' => $faker->date(),
+                'city_id' => $faker->randomElement($cidadeIds),
             ]);
         }
     }

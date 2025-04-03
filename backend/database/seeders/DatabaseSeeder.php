@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            EstadoSeeder::class,
-            CidadeSeeder::class,
-            ClienteSeeder::class,
+            StateSeeder::class,
+            CitySeeder::class,
+            CustomerSeeder::class,
         ]);
 
         

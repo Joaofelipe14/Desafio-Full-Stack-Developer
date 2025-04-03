@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Cliente; // Alterado de User para Cliente
+use App\Models\Customers;
 
 class EmailBoasVindasMailable extends Mailable
 {
@@ -13,9 +14,9 @@ class EmailBoasVindasMailable extends Mailable
 
     public $cliente;
 
-    public function __construct(Cliente $cliente)
+    public function __construct(Customers $customer)
     {
-        $this->cliente = $cliente;
+        $this->cliente = $customer;
     }
 
     public function build()

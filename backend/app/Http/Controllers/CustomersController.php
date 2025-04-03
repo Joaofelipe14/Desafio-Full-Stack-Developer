@@ -5,37 +5,38 @@ namespace App\Http\Controllers;
 use App\Jobs\EnviarEmailBoasVindasJob;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Customers;
 use Exception;
 
-class ClienteController extends Controller
+class CustomersController extends Controller
 {
     public function index()
     {
-        $clientes = Cliente::paginate(5);
+        $customers = Customers::paginate(5);
 
-        return response()->json($clientes, 200);
+        return response()->json($customers, 200);
     }
 
     public function store(Request $request)
     {
         try {
             $validated = $request->validate([
-                'nome' => 'required|string|max:255',
-                'cpf' => 'required|string|size:11|unique:clientes,cpf',
-                'email' => 'required|email|unique:clientes,email',
-                'data_nascimento' => 'required|date',
-                'cidade_id' => 'required|exists:cidades,id'
+                'name' => 'required|string|max:255',
+                'cpf' => 'required|string|size:11|unique:customers,cpf',
+                'email' => 'required|email|unique:customers,email',
+                'birth_date' => 'required|date',
+                'city_id' => 'required|exists:citys,id'
             ]);
 
-            $cliente = Cliente::create($validated);
+            $cliente = Customers::create($validated);
 
             EnviarEmailBoasVindasJob::dispatch($cliente)
                 ->delay(now()->addMinutes(2));
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Cliente cadastrado com sucesso',
-                'data' => $cliente 
+                'data' => $cliente
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
@@ -47,7 +48,7 @@ class ClienteController extends Controller
 
     public function show($id)
     {
-        $cliente = Cliente::with(['cidade.estado'])->find($id);
+        $cliente = Customers::with(['cidade.estado'])->find($id);
 
         if (!$cliente) {
             return response()->json(['erro' => 'Cliente não encontrado'], 404);
@@ -60,18 +61,18 @@ class ClienteController extends Controller
     {
 
         try {
-            $cliente = Cliente::find($id);
+            $cliente = Customers::find($id);
 
             if (!$cliente) {
                 return response()->json(['erro' => 'Cliente não encontrado'], 404);
             }
 
             $request->validate([
-                'nome' => 'sometimes|string|max:255',
-                'cpf' => 'sometimes|string|size:11|unique:clientes,cpf,' . $id,
-                'email' => 'sometimes|email|unique:clientes,email,' . $id,
-                'data_nascimento' => 'sometimes|date',
-                'cidade_id' => 'sometimes|exists:cidades,id'
+                'name' => 'sometimes|string|max:255',
+                'cpf' => 'sometimes|string|size:11|unique:customers,cpf,' . $id,
+                'email' => 'sometimes|email|unique:customers,email,' . $id,
+                'birth_date' => 'sometimes|date',
+                'city_id' => 'sometimes|exists:citys,id'
             ]);
 
             $cliente->update($request->all());
@@ -87,7 +88,7 @@ class ClienteController extends Controller
 
     public function destroy($id)
     {
-        $cliente = Cliente::find($id);
+        $cliente = Customers::find($id);
 
         if (!$cliente) {
             return response()->json(['erro' => 'Cliente não encontrado'], 404);

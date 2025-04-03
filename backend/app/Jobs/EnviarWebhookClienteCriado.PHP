@@ -28,11 +28,11 @@ class EnviarWebhookClienteCriado implements ShouldQueue
 
             $response = Http::retry(5, 2000)->post($url, [
                 'id' => $this->cliente->id,
-                'nome' => $this->cliente->nome,
+                'name' => $this->cliente->name,
                 'cpf' => $this->cliente->cpf,
                 'email' => $this->cliente->email,
-                'data_nascimento' => $this->cliente->data_nascimento,
-                'cidade_id' => $this->cliente->cidade_id,
+                'birth_date' => $this->cliente->birth_date,
+                'city_id' => $this->cliente->city_id,
                 'criado_em' => $this->cliente->created_at,
                 'token' => $token
             ]);

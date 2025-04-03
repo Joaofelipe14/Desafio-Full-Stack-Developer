@@ -4,7 +4,7 @@
     <title>Bem-vindo!</title>
 </head>
 <body>
-    <h1>Olá, {{ $cliente->nome }}! 👋</h1>
+    <h1>Olá, {{ $cliente->name }}! 👋</h1>
     <p>Seja bem-vindo ao <strong>{{ config('app.name') }}</strong>!</p>
     
     <p>Detalhes do seu cadastro:</p>

@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Cliente;
 use App\Mail\EmailBoasVindasMailable;
 use App\Models\ClienteEmailLog;
+use App\Models\Customers;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,26 +18,26 @@ class EnviarEmailBoasVindasJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public Cliente $cliente) {}
+    public function __construct(public Customers $customer) {}
 
     public function handle()
     {
         try {
-            Mail::to($this->cliente->email)->send(new EmailBoasVindasMailable($this->cliente));
+            Mail::to($this->customer->email)->send(new EmailBoasVindasMailable($this->customer));
             
             ClienteEmailLog::create([
-                'cliente_id' => $this->cliente->id,
-                'tipo' => 'boas_vindas',
+                'customer_id' => $this->customer->id,
+                'type' => 'boas_vindas',
                 'status' => 'enviado',
-                'enviado_em' => now(),
+                'sent_in' => now(),
             ]);
 
         } catch (Throwable $e) {
             ClienteEmailLog::create([
-                'cliente_id' => $this->cliente->id,
-                'tipo' => 'boas_vindas',
+                'customer_id' => $this->customer->id,
+                'type' => 'boas_vindas',
                 'status' => 'falha: ' . $e->getMessage(),
-                'enviado_em' => now(),
+                'sent_in' => now(),
             ]);
 
             throw $e; // Permite retentativas

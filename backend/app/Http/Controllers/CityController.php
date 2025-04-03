@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cidade;
+use App\Models\City;
 use Illuminate\Http\Request;
 
-class CidadeController extends Controller
+class CityController extends Controller
 {
     public function index()
     {
-        return Cidade::with('estado')->get();
+        return City::with('state')->get();
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 
-class ChamadasController extends Controller
+class CallController extends Controller
 {
     protected $twilio;
 
@@ -14,7 +14,7 @@ class ChamadasController extends Controller
         $this->twilio = new Client(env('TWILIO_SID'), env('TWILIO_AUTH_TOKEN'));
     }
 
-    public function iniciarLigacao(Request $request)
+    public function initCall(Request $request)
     {
         $request->validate([
             'destino' => 'required|string'
@@ -41,7 +41,7 @@ class ChamadasController extends Controller
         }
     }
 
-    public function conectarUsuarios(Request $request)
+    public function connectUsers(Request $request)
     {
         $numeroDestino = $request->query('To');
     
