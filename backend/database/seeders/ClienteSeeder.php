@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -16,6 +17,7 @@ class ClienteSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             Cliente::create([
                 'nome' => $faker->name,
+                'url_perfil' => $faker->imageUrl(200, 200, 'people'),
                 'cpf' => $faker->unique()->cpf(false),
                 'email' => $faker->unique()->email,
                 'data_nascimento' => $faker->date(),

@@ -5,21 +5,24 @@ use App\Http\Controllers\CidadeController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\HuggyAuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
 
 use App\Http\Controllers\ChamadasController;
+use App\Http\Controllers\HuggyWebhookController;
 
 Route::post('/ligar', [ChamadasController::class, 'iniciarLigacao']);
 Route::get('/twilio/conectar', [ChamadasController::class, 'conectarUsuarios'])->name('twilio.conectar');
 
 
 Route::post('/login', [AuthController::class, 'login']);
-
 Route::get('/huggy/auth', [HuggyAuthController::class, 'redirectToHuggy']);
 Route::get('/huggy/auth/callback', [HuggyAuthController::class, 'handleCallback']);
+
+
+Route::post('/weebhook', [HuggyWebhookController::class, 'receberWebhook']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

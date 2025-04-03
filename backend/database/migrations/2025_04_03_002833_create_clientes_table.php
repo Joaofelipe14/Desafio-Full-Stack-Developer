@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('cpf')->unique();
+            $table->string('cpf')->nullable();
             $table->string('email', 100)->unique();
-            $table->date('data_nascimento');
-            $table->foreignId('cidade_id')->constrained('cidades')->onDelete('cascade');
+            $table->date('data_nascimento')->nullable();
+            $table->string('url_perfil')->nullable();
+            $table->foreignId('cidade_id')->constrained('cidades')->onDelete('cascade')->nullable();;
             $table->timestamps();
 
         });
