@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Route;
 
 
 
+use App\Http\Controllers\ChamadasController;
+
+Route::post('/ligar', [ChamadasController::class, 'iniciarLigacao']);
+Route::get('/twilio/conectar', [ChamadasController::class, 'conectarUsuarios'])->name('twilio.conectar');
+
+
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/huggy/auth', [HuggyAuthController::class, 'redirectToHuggy']);
