@@ -26,8 +26,8 @@ class ClientController extends Controller
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'cpf' => 'nullable|string|size:11|unique:customers,cpf',
-                'email' => 'required|email|unique:customers,email',
+                'mobile' => 'nullable|string',
+                'email' => 'required|email|unique:clients,email',
                 'birth_date' => 'nullable|date',
                 'city_id' => 'nullable|exists:cities,id',
                 'address' => 'nullable|string|max:255',
@@ -98,8 +98,8 @@ class ClientController extends Controller
 
             $validated = $request->validate([
                 'name' => 'sometimes|string|max:255',
-                'cpf' => 'sometimes|string|size:11|unique:customers,cpf,' . $id,
-                'email' => 'sometimes|email|unique:customers,email,' . $id,
+                'mobile' => 'sometimes|string',
+                'email' => 'sometimes|email|unique:clients,email,' . $id,
                 'birth_date' => 'sometimes|date',
                 'city_id' => 'sometimes|exists:cities,id',
                 'address' => 'sometimes|string|max:255',

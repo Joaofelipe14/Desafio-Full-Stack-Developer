@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\EnviarEmailBoasVindasJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\Cliente;
-use App\Models\Customers;
+use App\Models\Clients;
 
 class HuggyWebhookController extends Controller
 {
@@ -22,7 +21,7 @@ class HuggyWebhookController extends Controller
 
             foreach ($request->messages['createdCustomer'] as $clienteData) {
                 try {
-                    $cliente = Customers::create([
+                    $cliente = Clients::create([
                         'name' => $clienteData['name'],
                         'mobile' => $clienteData['mobile'] ?? null,
                         'email' => $clienteData['email'],

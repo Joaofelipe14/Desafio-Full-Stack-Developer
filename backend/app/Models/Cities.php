@@ -16,8 +16,8 @@ class Cities extends Model
         return $this->belongsTo(States::class);
     }
 
-    public function customers()
+    public function client()
     {
-        return $this->hasMany(Customers::class);
+        return $this->hasMany(Clients::class);
     }
 }

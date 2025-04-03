@@ -10,7 +10,7 @@ class Clients extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'cpf', 'email', 'birth_date','url_perfil', 'address_id'];
+    protected $fillable = ['name', 'mobile', 'email', 'birth_date','url_perfil', 'address_id'];
 
     public function address()
     {
