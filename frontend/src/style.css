@@ -1,6 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 
+:root {
+    --white: #FFFFFF;
+    --mine-shaft-10: #F8F8F8;
+    --mine-shaft-30: #E1E1E1;
+    --mine-shaft-100: #757575;
+    --mine-shaft-700: #262626;
+
+    --persian-blue-300: #5946E4;
+    --persian-blue-600: #321BDE;
+    --persian-blue-700: #2715B0;
+
+
+    background-color: var(--mine-shaft-10);
+
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -8,6 +25,7 @@
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+
 }
 
 body {
@@ -19,35 +37,17 @@ p {
     margin: 0;
 }
 
+h1 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    color: var(--mine-shaft-700);
+}
+
 h2 {
     font-size: 1.25rem;
     font-weight: 500;
     margin: 0;
-}
+    line-height: 1.75rem;
 
-.btn-principal {
-    border: 0;
-    padding: 0.5rem 0.75rem;
-    height: 36px;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: flex;
-    gap: 0.5rem;
-    background-color: #321BDE;
-    color: #FFF;
-}
-
-.btn-principal :hover {
-    background-color: #5946E4;
-}
-
-.btn-principal :focus {
-    background-color: #2715B0;
-}
-
-.btn-principal :active {
-    background-color: #2715B0;
 }
