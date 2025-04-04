@@ -6,12 +6,17 @@
     --mine-shaft-10: #F8F8F8;
     --mine-shaft-30: #E1E1E1;
     --mine-shaft-100: #757575;
+    --mine-shaft-400: rgba(255, 255, 255, 1);
     --mine-shaft-700: #262626;
 
+    --persian-blue-10:rgba(248, 247, 253, 1);
     --persian-blue-300: #5946E4;
     --persian-blue-600: #321BDE;
     --persian-blue-700: #2715B0;
+    --persian-blue-800: #180D6E;
 
+
+    --alizarin-crimson-500: rgba(173, 34, 19, 1);
 
     background-color: var(--mine-shaft-10);
 
@@ -21,7 +26,6 @@
 * {
     margin: 0;
     padding: 0;
-    border: 0;
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
@@ -49,5 +53,29 @@ h2 {
     font-weight: 500;
     margin: 0;
     line-height: 1.75rem;
+    color: var(--mine-shaft-700);
 
+
+}
+
+h3 {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: 0.15px;
+    color: var(--mine-shaft-100)
+}
+
+.caption {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+
+    /* mine-shaft/400 */
+    color: var(--mine-shaft-400);
 }
