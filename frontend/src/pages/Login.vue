@@ -2,25 +2,31 @@
   <section class="container">
     <div class="card">
 
-      <h2> Login </h2>
+      <h1> Login </h1>
 
-      <button class="btn-principal ">
-        Fazer login com a Huggy
-      </button>
-      
+      <ButtonComponent label="Fazer login com a Huggy" @click="handleButtonClick" />
+
     </div>
   </section>
 
 </template>
 
 <script lang="ts">
+import ButtonComponent from '../components/ButtonComponent.vue';
+
 export default {
-  name: 'Login',
+  components: {
+    ButtonComponent,
+  },
+  methods: {
+    handleButtonClick() {
+      alert("Botão clicado!");
+    },
+  },
 };
 </script>
 
 <style scoped>
-
 .container {
   display: flex;
   flex-direction: column;
