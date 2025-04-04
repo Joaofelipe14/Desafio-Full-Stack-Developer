@@ -3,6 +3,8 @@
         <h2>Contatos</h2>
         <div class="logout" @click="logout">sair</div>
 
+        <ClientDetails v-if="selectedClient" :client="selectedClient" @close="closeClientDetails" />
+
         <div class="card">
             <div class="header-card">
                 <div class="input-search">
@@ -26,7 +28,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="row-cliente" v-for="client in clients.data" :key="client.id">
+                    <tr @click="openClientDetails(client.id)" class="row-cliente" v-for="client in clients.data"
+                        :key="client.id">
                         <td class="name-client">
                             <span class="initial-client">{{ getInitials(client.name) }}</span>
                             {{ client.name }}
@@ -35,8 +38,8 @@
                         <td>{{ client.mobile }}</td>
 
                         <td class="action-client">
-                            <img src="../assets//icons/edit.svg" alt="">
-                            <img src="../assets//icons/trash.svg" alt="">
+                            <img src="../assets/icons/edit.svg" alt="">
+                            <img src="../assets/icons/trash.svg" alt="">
 
                         </td>
 
@@ -58,10 +61,13 @@
 
 <script lang="ts">
 import ButtonComponent from '../components/ButtonComponent.vue';
+import ClientDetails from '../components/ClientDetails.vue';
 import InputComponent from '../components/InputComponent.vue';
 import AuthService from '../services/authService';
 import { ClientService } from '../services/clientsService';
 import type { Client, PaginatedResponse } from '../types/clients';
+import { getInitials } from '../utils/functions'
+
 
 export default {
     name: 'Clients',
@@ -77,6 +83,8 @@ export default {
             } as PaginatedResponse<Client>,
             textValue: "",
             inputValue: "",
+            selectedClient: null as Client | null,
+
         };
 
     },
@@ -92,7 +100,8 @@ export default {
     },
     components: {
         ButtonComponent,
-        InputComponent
+        InputComponent,
+        ClientDetails
     },
     methods: {
         ButtonAddClient() {
@@ -103,10 +112,18 @@ export default {
 
             AuthService.logout()
         },
-        getInitials(name: string) {
-            const names = name.split(" ");
-            const initials = names.map(part => part.charAt(0).toUpperCase()).join("");
-            return initials.slice(0, 2);
+        getInitials,
+
+        async openClientDetails(clientId: number) {
+            try {
+                const client = await ClientService.getClient(clientId);
+                this.selectedClient = client;
+            } catch (error) {
+                console.error('Erro ao buscar detalhes do cliente:', error);
+            }
+        },
+        closeClientDetails() {
+            this.selectedClient = null; // Fechar o modal
         }
     }
 }
@@ -135,7 +152,6 @@ h2 {
     border-radius: 1rem;
     box-shadow: 0px 1px 2px 0px #00000026;
     height: 90vh;
-    overflow-x: auto;
 }
 
 .header-card {
@@ -189,21 +205,6 @@ table {
     margin-bottom: 10px;
 }
 
-.initial-client {
-    width: 2rem;
-    height: 2rem;
-    background-color: var(--persian-blue-10);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    margin-right: 1rem;
-    text-transform: uppercase;
-    color: var(--persian-blue-800);
-    font-weight: 500;
-    min-width: 32px;
-
-}
 
 .name-client {
     display: flex;
@@ -213,7 +214,9 @@ table {
 
 }
 
-.row-cliente:hover {}
+.row-cliente:hover {
+    cursor: pointer;
+}
 
 .action-client {
     display: flex;

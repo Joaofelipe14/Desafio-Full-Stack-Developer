@@ -6,12 +6,25 @@ export interface PaginatedResponse<T> {
     next_page_url: string | null;
     prev_page_url: string | null;
 }
+export interface City {
+    id: number;
+    name: string;
+    state_id: number;
+    state?: State;  
+}
+
+export interface State {
+    id: number;
+    name: string;
+    uf: string;
+}
 
 export interface Address {
     id: number;
     address: string | null;
     neighborhood: string | null;
     city_id: number | null;
+    city?: City | null;  
 }
 
 export interface Client {
