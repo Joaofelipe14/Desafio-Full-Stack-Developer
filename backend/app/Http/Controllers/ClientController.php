@@ -13,7 +13,7 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $clients = Clients::paginate(5);
+        $clients = Clients::paginate(0);
 
         return response()->json($clients, 200);
     }

@@ -1,16 +1,14 @@
 <template>
     <div class="container">
         <h2>Contatos</h2>
-        <div  class="logout" @click="logout">sair</div>
+        <div class="logout" @click="logout">sair</div>
 
         <div class="card">
             <div class="header-card">
-                <!-- <div style="max-width: 50%;"> -->
-                    <div class="input-search"  > 
-                        <InputComponent type="search" v-model="inputValue" placeholder="Buscar contato" />
-                    </div>
+                <div class="input-search">
+                    <InputComponent type="search" v-model="inputValue" placeholder="Buscar contato" />
+                </div>
 
-                <!-- </div> -->
                 <div class="action-header">
                     <ButtonComponent label="Adicionar contato" :show-icon="true" @click="ButtonAddClient" />
                     <img title="Clique para acessar os gráficos" class="icon-report" src="../assets/icons/report.svg"
@@ -25,7 +23,6 @@
                         <th>Email</th>
                         <th>Telefone</th>
                         <th></th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -47,7 +44,7 @@
                 </tbody>
             </table>
 
-            <div v-if="clients.data.length == 0" class="no-contacts active">
+            <div v-if="clients.data && clients.data.length === 0" class="no-contacts active">
                 <img src="../assets/image.svg" alt="">
                 <h3>Ainda não há contatos.</h3>
                 <ButtonComponent label="Adicionar contato" :show-icon="true" @click="ButtonAddClient" />
@@ -63,79 +60,35 @@
 import ButtonComponent from '../components/ButtonComponent.vue';
 import InputComponent from '../components/InputComponent.vue';
 import AuthService from '../services/authService';
+import { ClientService } from '../services/clientsService';
+import type { Client, PaginatedResponse } from '../types/clients';
 
 export default {
     name: 'Clients',
     data() {
         return {
-            //**  Dados mockados que emularão a resposta da API **//
             clients: {
+                data: [],
                 current_page: 1,
-                data: [
-                    {
-                        id: 1,
-                        name: 'Sr. Inácio Barros Caldeira',
-                        mobile: '34958610771',
-                        email: 'michele.davila@sepulveda.net',
-                        birth_date: '1990-04-11',
-                        url_perfil: 'https://via.placeholder.com/200x200.png/00aa11?text=people+omnis',
-                        address_id: 1,
-                        created_at: '2025-04-03T23:07:32.000000Z',
-                        updated_at: '2025-04-03T23:07:32.000000Z',
-                    },
-                    {
-                        id: 2,
-                        name: 'Mário Eric Carrara',
-                        mobile: '18974274755',
-                        email: 'wdavila@ferraz.com.br',
-                        birth_date: '2007-03-16',
-                        url_perfil: 'https://via.placeholder.com/200x200.png/000011?text=people+cumque',
-                        address_id: 2,
-                        created_at: '2025-04-03T23:07:32.000000Z',
-                        updated_at: '2025-04-03T23:07:32.000000Z',
-                    },
-                    {
-                        id: 3,
-                        name: 'Srta. Jasmin Esther Bonilha',
-                        mobile: '24943707882',
-                        email: 'iteles@salgado.com.br',
-                        birth_date: '2009-09-13',
-                        url_perfil: 'https://via.placeholder.com/200x200.png/006633?text=people+et',
-                        address_id: 3,
-                        created_at: '2025-04-03T23:07:32.000000Z',
-                        updated_at: '2025-04-03T23:07:32.000000Z',
-                    },
-                    {
-                        id: 4,
-                        name: 'Marco Arruda Pedrosa Filho',
-                        mobile: '22932185531',
-                        email: 'vflores@yahoo.com',
-                        birth_date: '2012-05-25',
-                        url_perfil: 'https://via.placeholder.com/200x200.png/00ccff?text=people+expedita',
-                        address_id: 4,
-                        created_at: '2025-04-03T23:07:32.000000Z',
-                        updated_at: '2025-04-03T23:07:32.000000Z',
-                    },
-                    {
-                        id: 5,
-                        name: 'Sr. Edilson Ramos',
-                        mobile: '99993468516',
-                        email: 'valentin48@r7.com',
-                        birth_date: '1985-05-07',
-                        url_perfil: 'https://via.placeholder.com/200x200.png/00aabb?text=people+sit',
-                        address_id: 5,
-                        created_at: '2025-04-03T23:07:32.000000Z',
-                        updated_at: '2025-04-03T23:07:32.000000Z',
-                    }
-                ],
-                first_page_url: 'http://127.0.0.1:8000/api/clients?page=1',
-                last_page: 2,
-                next_page_url: 'http://127.0.0.1:8000/api/clients?page=2',
+                last_page: 1,
+                first_page_url: '',
+                next_page_url: null,
                 prev_page_url: null,
-            },
+            } as PaginatedResponse<Client>,
             textValue: "",
             inputValue: "",
+        };
+
+    },
+    async mounted() {
+        try {
+            const response = await ClientService.getClients(1);
+            this.clients = response;
+
+        } catch (error) {
+            console.error('Erro ao buscar os clientes:', error);
         }
+
     },
     components: {
         ButtonComponent,
@@ -145,7 +98,7 @@ export default {
         ButtonAddClient() {
             console.log('botaõ clicadao')
         },
-        logout(){
+        logout() {
             console.log('saindo')
 
             AuthService.logout()
@@ -160,8 +113,7 @@ export default {
 </script>
 
 <style scoped>
-
-.logout{
+.logout {
     cursor: pointer;
     top: 10px;
     right: 50%;
@@ -200,7 +152,7 @@ h2 {
     align-items: center;
 }
 
-.input-search{
+.input-search {
     width: 250px;
 }
 
