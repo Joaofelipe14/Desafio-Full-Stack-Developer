@@ -1,14 +1,19 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import Login from '../pages/Login.vue';
 import Clients from '../pages/Clients.vue';
-import Teste from '../pages/Teste.vue';
+import Home from '../pages/Home.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Login',
-    component: Login,
+    name: 'Home',
+    component: Home,
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home,
   },
   {
     path: '/login',
@@ -18,13 +23,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/clients',
     name: 'Clients',
-    component: Clients,
-  },
-  {
-    path: '/teste',
-    name: 'teste',
-    component: Teste,
-  },
+    component: Clients, 
+  }
 ];
 
 const router = createRouter({

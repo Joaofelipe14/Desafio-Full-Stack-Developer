@@ -20,6 +20,8 @@ Route::post('/weebhook', [HuggyWebhookController::class, 'receberWebhook']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/me', [AuthController::class, 'logout']);
+
 
     Route::get('/states', [StateController::class, 'index']);
 

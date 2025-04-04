@@ -75,7 +75,5 @@ h3 {
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.4px;
-
-    /* mine-shaft/400 */
-    color: var(--mine-shaft-400);
+    color: var(--mine-shaft-700);
 }

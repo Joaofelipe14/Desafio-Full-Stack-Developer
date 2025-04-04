@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -72,11 +71,14 @@ class HuggyAuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+        // return response()->json([
+        //     'user' => $user,
+        //     'token' => $token,
+        // ]);
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token
-        ], 200);
+        return redirect('http://localhost:5173/?token=' . $token); // Alterar para a URL do frontend
+
+    
     }
     
 }

@@ -1,10 +1,16 @@
 <template>
     <div class="container">
         <h2>Contatos</h2>
+        <div  class="logout" @click="logout">sair</div>
 
         <div class="card">
             <div class="header-card">
-                <InputComponent type="search" v-model="inputValue" placeholder="Buscar contato"/>
+                <!-- <div style="max-width: 50%;"> -->
+                    <div class="input-search"  > 
+                        <InputComponent type="search" v-model="inputValue" placeholder="Buscar contato" />
+                    </div>
+
+                <!-- </div> -->
                 <div class="action-header">
                     <ButtonComponent label="Adicionar contato" :show-icon="true" @click="ButtonAddClient" />
                     <img title="Clique para acessar os gráficos" class="icon-report" src="../assets/icons/report.svg"
@@ -56,6 +62,7 @@
 <script lang="ts">
 import ButtonComponent from '../components/ButtonComponent.vue';
 import InputComponent from '../components/InputComponent.vue';
+import AuthService from '../services/authService';
 
 export default {
     name: 'Clients',
@@ -138,6 +145,11 @@ export default {
         ButtonAddClient() {
             console.log('botaõ clicadao')
         },
+        logout(){
+            console.log('saindo')
+
+            AuthService.logout()
+        },
         getInitials(name: string) {
             const names = name.split(" ");
             const initials = names.map(part => part.charAt(0).toUpperCase()).join("");
@@ -148,6 +160,14 @@ export default {
 </script>
 
 <style scoped>
+
+.logout{
+    cursor: pointer;
+    top: 10px;
+    right: 50%;
+    position: absolute;
+}
+
 .container {
     max-width: 930px;
     margin: 20px auto;
@@ -171,13 +191,17 @@ h2 {
     justify-content: space-between;
     padding: 1rem;
     flex-wrap: wrap;
+    gap: 10px;
 }
 
 .action-header {
     display: flex;
     gap: 16px;
     align-items: center;
+}
 
+.input-search{
+    width: 250px;
 }
 
 .icon-report {
@@ -226,7 +250,7 @@ table {
     color: var(--persian-blue-800);
     font-weight: 500;
     min-width: 32px;
-    
+
 }
 
 .name-client {
@@ -234,21 +258,26 @@ table {
     flex-direction: row;
     align-items: center;
     white-space: nowrap;
-    
+
 }
 
 .row-cliente:hover {}
 
-.action-client{
+.action-client {
     display: flex;
     flex-direction: row;
     gap: 16px;
 }
 
-.action-client img{
+.action-client img {
     width: 15px;
     height: 15px;
 }
+
+.action-client img:hover {
+    transform: scale(1.1);
+}
+
 table th {
     padding: 1rem;
     color: #505050;
@@ -316,5 +345,6 @@ td:last-child {
 /* Mostrar o botão editar quando a linha estiver sendo "hovered" */
 tr:hover td:last-child {
     visibility: visible;
+
 }
 </style>

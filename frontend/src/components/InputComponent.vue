@@ -1,19 +1,17 @@
 <template>
-    <div :class="['input-container', state, type]">
-        <label v-if="label">{{ label }}</label>
-        <div class="input-search">
+    <div :class="['input-container', type]">
+        <label class="caption" v-if="label">{{ label }}</label>
             <span v-if="type === 'search'">
                 <img class="icon-search" src="../assets/icons/search.svg" alt="">
-            </span>
+            </span> 
             <input 
-            class="input" 
-            :type="inputType" 
+            :type="type" 
             :class="{ error: isError, 'padding-input': type === 'search' }"  
             :placeholder="placeholder"
             :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
-        </div>
-        <span v-if="isError" class="error-message">{{ errorMessage }}</span>
+        <div v-if="isError" class="error-message">{{ errorMessage }}</div>
     </div>
+
 </template>
 
 <script>
@@ -27,22 +25,8 @@ export default {
         isError: { default: false },
 
     },
-    computed: {
-        inputType() {
-            return this.type === 'search' ? 'text' : 'text';
-        },
-    },
     methods: {
 
-    },
-    mounted() {
-        console.log('Componente montado, estado inicial:', this.state);
-    },
-    watch: {
-        state(newState) {
-            // A cada mudança no valor de 'state', logue no console
-            console.log('O valor de state foi alterado para:', newState);
-        },
     },
 };
 
@@ -53,20 +37,22 @@ export default {
 .input-container {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
+    width: 100%;
 }
 
 .icon-search {
     position: absolute;
-    margin-top: 8px;
     margin-left: 5px;
-    /* filter: invert(1); */
     width: 20px;
     height: 20px;
+    margin-top: 11px;
 }
 
 .padding-input{
     padding-left: 30px;
+    max-width: 300px;
+
 }
 
 

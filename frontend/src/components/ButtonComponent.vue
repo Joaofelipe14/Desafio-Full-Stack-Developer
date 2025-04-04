@@ -40,12 +40,13 @@ button {
 
   /* Button */
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 18px;
   display: flex;
   align-items: center;
   letter-spacing: 1.25px;
+
 }
 
 .icon{
