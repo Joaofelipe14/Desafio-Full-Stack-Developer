@@ -332,6 +332,7 @@ export default defineComponent({
     height: 1px;
     background-color: var(--mine-shaft-30);
 }
+
 .modal {
   position: fixed;
   top: 0;

@@ -35,8 +35,6 @@ export default {
         isError: { default: false },
         options: { type: Array, default: () => [] },
         disabled: { type: Boolean, default: false }  
-
-
     },
     methods: {
 
@@ -78,7 +76,6 @@ export default {
     font-size: 14px;
 }
 
-/*   */
 
 .style-input:hover {
     border-color: var(--mine-shaft-100);

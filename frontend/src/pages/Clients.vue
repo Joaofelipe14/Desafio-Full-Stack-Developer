@@ -184,6 +184,8 @@ h2 {
     height: 90vh;
 }
 
+
+
 .header-card {
     display: flex;
     justify-content: space-between;
@@ -272,11 +274,21 @@ table th {
 }
 
 table th {
-    border-bottom: 1px solid var(--mine-shaft-30);
     width: 100vh;
-    ;
+    position: relative;
 
 }
+
+table th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -8px;
+    right: -8px;
+    height: 1px;
+    background-color: var(--mine-shaft-30);
+}
+
 
 td {
     font-style: normal;
