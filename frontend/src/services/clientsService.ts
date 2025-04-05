@@ -1,4 +1,4 @@
-import type { Client, PaginatedResponse } from "../types/clients";
+import type { Client, ClientFormData, PaginatedResponse } from "../types/clients";
 import api from "./config";
 
 
@@ -21,7 +21,7 @@ export const ClientService = {
     }
   },
 
-  async createClient(clientData: Partial<Client>): Promise<Client> {
+  async createClient(clientData:ClientFormData): Promise<Client> {
     try {
       const response = await api.post('/clients', clientData);
       return response.data.data;
@@ -30,7 +30,7 @@ export const ClientService = {
     }
   },
 
-  async updateClient(id: number, clientData: Partial<Client>): Promise<Client> {
+  async updateClient(id: number, clientData:ClientFormData): Promise<Client> {
     try {
       const response = await api.put(`/clients/${id}`, clientData);
       return response.data.data;

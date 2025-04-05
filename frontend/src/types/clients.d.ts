@@ -10,7 +10,7 @@ export interface City {
     id: number;
     name: string;
     state_id: number;
-    state?: State;  
+    state?: State;
 }
 
 export interface State {
@@ -24,10 +24,14 @@ export interface Address {
     address: string | null;
     neighborhood: string | null;
     city_id: number | null;
-    city?: City | null;  
+    city?: City | null;
 }
 
+
+
 export interface Client {
+    city_id: any;
+    neighborhood: string;
     id: number;
     name: string;
     mobile: string;
@@ -38,4 +42,16 @@ export interface Client {
     created_at: string;
     updated_at: string;
     address?: Address | null;
+}
+
+export interface ClientFormData {
+    id?: number;
+    name: string;
+    mobile: string;
+    email: string;
+    birth_date: string;
+    city_id: number | null;
+    address: string | null;
+    neighborhood: string | null;
+    city_id: number | null;
 }

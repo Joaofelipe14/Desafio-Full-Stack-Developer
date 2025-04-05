@@ -3,8 +3,10 @@
         <h2>Contatos</h2>
         <div class="logout" @click="logout">sair</div>
 
-        <ClientDetails v-if="selectedClient" :client="selectedClient" @close="closeClientDetails" />
-
+        <ClientDetails v-if="selectedClient && showClientDetails" :client="selectedClient"
+            @close="closeClientDetails" />
+        <ClientFormComponent v-if="showClientForm" :client="selectedClient" @close="closeClientForm"
+            @success="handleClientSuccess" />
         <div class="card">
             <div class="header-card">
                 <div class="input-search">
@@ -12,7 +14,7 @@
                 </div>
 
                 <div class="action-header">
-                    <ButtonComponent label="Adicionar contato" :show-icon="true" @click="ButtonAddClient" />
+                    <ButtonComponent @click="openClientForm(null)" label="Adicionar contato" :show-icon="true" />
                     <img title="Clique para acessar os gráficos" class="icon-report" src="../assets/icons/report.svg"
                         alt="">
                 </div>
@@ -28,8 +30,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr @click="openClientDetails(client.id)" class="row-cliente" v-for="client in clients.data"
-                        :key="client.id">
+                    <!-- @click="openClientDetails(client.id)" -->
+
+                    <tr class="row-cliente" v-for="client in clients.data" :key="client.id">
                         <td class="name-client">
                             <span class="initial-client">{{ getInitials(client.name) }}</span>
                             {{ client.name }}
@@ -38,7 +41,7 @@
                         <td>{{ client.mobile }}</td>
 
                         <td class="action-client">
-                            <img src="../assets/icons/edit.svg" alt="">
+                            <img @click="openClientForm(client.id)" src="../assets/icons/edit.svg" alt="">
                             <img src="../assets/icons/trash.svg" alt="">
 
                         </td>
@@ -50,7 +53,7 @@
             <div v-if="clients.data && clients.data.length === 0" class="no-contacts active">
                 <img src="../assets/image.svg" alt="">
                 <h3>Ainda não há contatos.</h3>
-                <ButtonComponent label="Adicionar contato" :show-icon="true" @click="ButtonAddClient" />
+                <ButtonComponent label="Adicionar contato" :show-icon="true" @click="openClientForm(null)" />
 
             </div>
         </div>
@@ -61,8 +64,10 @@
 
 <script lang="ts">
 import ButtonComponent from '../components/ButtonComponent.vue';
-import ClientDetails from '../components/ClientDetails.vue';
 import InputComponent from '../components/InputComponent.vue';
+
+import ClientDetails from '../components/ClientDetailsComponent.vue';
+import ClientFormComponent from '../components/ClientFormComponent.vue';
 import AuthService from '../services/authService';
 import { ClientService } from '../services/clientsService';
 import type { Client, PaginatedResponse } from '../types/clients';
@@ -84,6 +89,8 @@ export default {
             textValue: "",
             inputValue: "",
             selectedClient: null as Client | null,
+            showClientForm: false,
+            showClientDetails: false
 
         };
 
@@ -101,12 +108,10 @@ export default {
     components: {
         ButtonComponent,
         InputComponent,
-        ClientDetails
+        ClientDetails,
+        ClientFormComponent
     },
     methods: {
-        ButtonAddClient() {
-            console.log('botaõ clicadao')
-        },
         logout() {
             console.log('saindo')
 
@@ -115,6 +120,7 @@ export default {
         getInitials,
 
         async openClientDetails(clientId: number) {
+            this.showClientDetails = true;
             try {
                 const client = await ClientService.getClient(clientId);
                 this.selectedClient = client;
@@ -123,7 +129,36 @@ export default {
             }
         },
         closeClientDetails() {
-            this.selectedClient = null; // Fechar o modal
+            this.selectedClient = null;
+        },
+        async openClientForm(clientId: number | null) {
+            console.log('abrindo modal de form')
+
+
+            this.showClientForm = true;
+            if (clientId) {
+
+                try {
+                    const client = await ClientService.getClient(clientId);
+                    this.selectedClient = client;
+                } catch (error) {
+                    console.error('Erro ao buscar detalhes do cliente:', error);
+                }
+            } else {
+                this.selectedClient = null
+
+            }
+
+
+        },
+
+        closeClientForm() {
+            this.showClientForm = false;
+            this.selectedClient = null;
+        },
+
+        handleClientSuccess() {
+            //.fetchClients(); // Atualiza a lista após sucesso
         }
     }
 }
@@ -182,7 +217,6 @@ h2 {
 }
 
 
-
 table {
     width: 100%;
     border-spacing: 0;
@@ -222,6 +256,8 @@ table {
     display: flex;
     flex-direction: row;
     gap: 16px;
+    z-index: 1;
+    position: relative;
 }
 
 .action-client img {
@@ -267,10 +303,7 @@ table tbody tr:hover {
     background-color: var(--mine-shaft-10);
     border-radius: 20px !important;
     transition: ease-in-out 0.3s;
-
 }
-
-
 
 th:nth-child(1),
 td:nth-child(1) {

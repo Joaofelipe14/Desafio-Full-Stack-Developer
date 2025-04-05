@@ -76,7 +76,7 @@ class HuggyAuthController extends Controller
         //     'token' => $token,
         // ]);
 
-        return redirect('http://localhost:5173/?token=' . $token); // Alterar para a URL do frontend
+        return redirect('http://localhost:5173/home?token=' . $token); 
 
     
     }

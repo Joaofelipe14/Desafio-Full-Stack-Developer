@@ -13,8 +13,8 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $clients = Clients::paginate(0);
-
+        $clients = Clients::latest()
+            ->paginate(10);
         return response()->json($clients, 200);
     }
 
@@ -36,6 +36,7 @@ class ClientController extends Controller
 
             $addressId = null;
 
+
             if (!empty($validated['city_id'])) {
                 $address = Address::create([
                     'address' => $validated['address'] ?? null,
@@ -47,7 +48,7 @@ class ClientController extends Controller
 
             $cliente = Clients::create([
                 'name' => $validated['name'],
-                'cpf' => $validated['cpf'],
+                'mobile' => $validated['mobile'],
                 'email' => $validated['email'],
                 'birth_date' => $validated['birth_date'],
                 'address_id' => $addressId,
@@ -101,13 +102,15 @@ class ClientController extends Controller
                 'mobile' => 'sometimes|string',
                 'email' => 'sometimes|email|unique:clients,email,' . $id,
                 'birth_date' => 'sometimes|date',
-                'city_id' => 'sometimes|exists:cities,id',
-                'address' => 'sometimes|string|max:255',
-                'neighborhood' => 'sometimes|string|max:255',
+                'city_id' => 'nullable|exists:cities,id',
+                'address' => 'nullable|string|max:255',
+                'neighborhood' => 'nullable|string|max:255',
             ]);
 
             $addressId = $cliente->address_id;
-            if (!empty($addressId)) {
+
+
+            if (!empty($addressId) || !empty($validated['city_id'])) {
                 $address = Address::updateOrCreate(
                     ['id' => $addressId],
                     [
@@ -121,7 +124,7 @@ class ClientController extends Controller
 
             $cliente->update([
                 'name' => $validated['name'] ?? $cliente->name,
-                'cpf' => $validated['cpf'] ?? $cliente->cpf,
+                'mobile' => $validated['mobile'] ?? $cliente->mobile,
                 'email' => $validated['email'] ?? $cliente->email,
                 'birth_date' => $validated['birth_date'] ?? $cliente->birth_date,
                 'address_id' => $addressId,

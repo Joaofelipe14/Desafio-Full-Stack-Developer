@@ -1,7 +1,6 @@
 <template>
   <section class="container">
-    <div class="card">
-     
+    <div class="card">  
       <span>
         <img class="icon-sair" title="voltar para home" @click="redirectToLogin" src="../assets/icons/left.svg" alt="">
       </span>
@@ -11,7 +10,6 @@
 
         <InputComponent label="Email" v-model="email" placeholder="Digite seu email" type="email" :isError="emailError"
           errorMessage="Email inválido" required />
-
         <InputComponent label="Senha" v-model="password" placeholder="Digite sua senha" type="password"
           :isError="passwordError" errorMessage="Senha inválida" required />
 
