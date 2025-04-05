@@ -113,8 +113,6 @@ export default {
     },
     methods: {
         logout() {
-            console.log('saindo')
-
             AuthService.logout()
         },
         getInitials,
@@ -132,9 +130,6 @@ export default {
             this.selectedClient = null;
         },
         async openClientForm(clientId: number | null) {
-            console.log('abrindo modal de form')
-
-
             this.showClientForm = true;
             if (clientId) {
 

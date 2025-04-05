@@ -23,8 +23,7 @@
           placeholder="Selecione um estado" :isError="stateError" errorMessage="Estado é obrigatório" />
 
         <InputComponent type="select" label="Cidade" v-model="formData.city_id" :options="cityOptions"
-          placeholder="Selecione uma                    'city_id' => $validated['city_id'],
- cidade" :disabled="!selectedStateId" :isError="cityError"
+          placeholder="Selecione uma cidade" :disabled="!selectedStateId" :isError="cityError"
           errorMessage="Cidade é obrigatória" />
 
         <InputComponent label="Endereço" v-model="formData.address" placeholder="Digite o endereço" type="text"
@@ -275,20 +274,30 @@ export default defineComponent({
 <style scoped>
 .client-form-modal {
   background-color: white;
-  padding: 20px;
+  padding: 24px 20px 0px 20px;
   border-radius: 8px;
   max-width: 610px;
   width: 100%;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
+.header-modal::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -20px;
+    right: -20px;
+    height: 1px;
+    background-color: var(--mine-shaft-30);
+}
+
 .header-modal {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding-bottom: 20px;
 }
 
 .close-button {
@@ -299,7 +308,6 @@ export default defineComponent({
 }
 
 .content-modal {
-  border-top: 1px solid var(--mine-shaft-30);
   padding-top: 24px;
   gap: 24px;
   display: flex;
@@ -310,9 +318,20 @@ export default defineComponent({
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  position: relative;
+  padding: 16px 0px;
   margin-top: 24px;
 }
 
+.footer-modal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px;
+    right: -20px;
+    height: 1px;
+    background-color: var(--mine-shaft-30);
+}
 .modal {
   position: fixed;
   top: 0;

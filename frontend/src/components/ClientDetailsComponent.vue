@@ -87,16 +87,27 @@ export default {
     max-width: 610px;
     width: 100%;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
+
+.header-modal::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -20px;
+    right: -20px;
+    height: 1px;
+    background-color: var(--mine-shaft-30);
+}
 
 .header-modal {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    flex-direction: row;
-    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 20px;
 }
 
 .header-name {
@@ -124,7 +135,6 @@ export default {
 }
 
 .content-modal {
-    border-top: 1px solid var(--mine-shaft-30);
     padding: 24px;
     gap: 24px;
     display: flex;
@@ -152,8 +162,9 @@ export default {
 
 }
 
-p{
-    font-weight: 400;;
+p {
+    font-weight: 400;
+    ;
     font-size: 14px;
     letter-spacing: 0.15px;
     line-height: 18px;
