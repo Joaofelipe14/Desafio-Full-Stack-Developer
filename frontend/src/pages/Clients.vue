@@ -33,12 +33,12 @@
                     <!-- @click="openClientDetails(client.id)" -->
 
                     <tr class="row-cliente" v-for="client in clients.data" :key="client.id">
-                        <td class="name-client">
+                        <td data-label="Nome" class="name-client">
                             <span class="initial-client">{{ getInitials(client.name) }}</span>
                             {{ client.name }}
                         </td>
-                        <td>{{ client.email }}</td>
-                        <td>{{ client.mobile }}</td>
+                        <td data-label="Email">{{ client.email }}</td>
+                        <td data-label="Telefone">{{ client.mobile }}</td>
 
                         <td class="action-client">
                             <img @click="openClientForm(client.id)" src="../assets/icons/edit.svg" alt="">
@@ -312,6 +312,7 @@ table tbody tr:hover {
     transition: ease-in-out 0.3s;
 }
 
+/* 
 th:nth-child(1),
 td:nth-child(1) {
     width: 40.86%;
@@ -330,7 +331,7 @@ td:nth-child(3) {
 th:nth-child(4),
 td:nth-child(4) {
     width: 7.53%;
-}
+} */
 
 /* Esconde o botão de editar */
 td:last-child {
@@ -340,6 +341,100 @@ td:last-child {
 /* Mostrar o botão editar quando a linha estiver sendo "hovered" */
 tr:hover td:last-child {
     visibility: visible;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+        max-width: 100%;
+    }
+
+    .logout {
+        right: 15px;
+    }
+
+    .card {
+        height: auto;
+        min-height: 90vh;
+        overflow-x: auto;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .header-card {
+        flex-direction: column;
+    }
+
+    .input-search {
+        width: 100%;
+    }
+
+    .action-header {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .no-contacts {
+        margin-top: 100px;
+        padding: 20px;
+    }
+
+    table th,
+    table td {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .action-client img {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+
+
+    table {
+        display: flex;
+        flex-direction: column;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    td {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+    }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: auto;
+        padding-right: 10px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.4px;
+        color: var(--mine-shaft-700);
+    }
+
+
+
 
 }
 </style>
