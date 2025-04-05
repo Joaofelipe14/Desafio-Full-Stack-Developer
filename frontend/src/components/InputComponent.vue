@@ -1,14 +1,24 @@
 <template>
     <div :class="['input-container', type]">
         <label class="caption" v-if="label">{{ label }}</label>
-            <span v-if="type === 'search'">
-                <img class="icon-search" src="../assets/icons/search.svg" alt="">
-            </span> 
-            <input 
-            :type="type" 
-            :class="{ error: isError, 'padding-input': type === 'search' }"  
-            :placeholder="placeholder"
+        <span v-if="type === 'search'">
+            <img class="icon-search" src="../assets/icons/search.svg" alt="">
+        </span>
+
+        <input class="style-input" :type="type" v-if="type !== 'select'"
+            :class="{ 'error': isError, 'padding-input': type === 'search' }" :placeholder="placeholder"
             :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
+
+        <select class="style-input" v-if="type === 'select'" :class="{ error: isError }" :value="modelValue"
+            @change="$emit('update:modelValue', $event.target.value)"
+            :disabled="disabled"
+            >
+            <option value="">{{ placeholder || 'Selecione uma opção' }}</option>
+            <option v-for="option in options" :key="option.value" :value="option.value">
+                {{ option.text }}
+            </option>
+        </select>
+
         <div v-if="isError" class="error-message">{{ errorMessage }}</div>
     </div>
 
@@ -17,12 +27,15 @@
 <script>
 export default {
     props: {
-        modelValue: String,
+        modelValue: [String, Number],
         placeholder: String,
         label: String,
         type: { type: String, default: 'default' },
         errorMessage: String,
         isError: { default: false },
+        options: { type: Array, default: () => [] },
+        disabled: { type: Boolean, default: false }  
+
 
     },
     methods: {
@@ -30,10 +43,10 @@ export default {
     },
 };
 
+
 </script>
 
 <style>
-
 .input-container {
     display: flex;
     flex-direction: column;
@@ -46,17 +59,15 @@ export default {
     margin-left: 5px;
     width: 20px;
     height: 20px;
-    margin-top: 11px;
+    margin-top: 13px;
 }
 
-.padding-input{
-    padding-left: 30px;
+.padding-input {
+    padding-left: 30px !important;
     max-width: 300px;
-
 }
 
-
-input {
+.style-input {
     display: flex;
     align-items: center;
     border: 1px solid var(--mine-shaft-30);
@@ -69,17 +80,17 @@ input {
 
 /*   */
 
-input:hover {
+.style-input:hover {
     border-color: var(--mine-shaft-100);
 }
 
-input:focus {
+.style-input:focus {
     border-color: var(--persian-blue-600);
     outline: none;
 
 }
 
-input:active {
+.input:active {
     border-color: var(--mine-shaft-30);
     color: var(--mine-shaft-10);
 

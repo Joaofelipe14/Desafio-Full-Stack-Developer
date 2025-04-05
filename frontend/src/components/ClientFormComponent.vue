@@ -1,4 +1,3 @@
-// Then update the component
 <template>
   <div class="modal">
     <div class="client-form-modal">
@@ -20,8 +19,13 @@
           placeholder="Digite a data de nascimento" type="date" :isError="birthDateError"
           errorMessage="Data inválida" />
 
-        <InputComponent label="Cidade ID" v-model="formData.city_id" placeholder="Digite o ID da cidade" type="number"
-          :isError="cityIdError" errorMessage="Cidade inválida" />
+        <InputComponent type="select" label="Estado" v-model="selectedStateId" :options="stateOptions"
+          placeholder="Selecione um estado" :isError="stateError" errorMessage="Estado é obrigatório" />
+
+        <InputComponent type="select" label="Cidade" v-model="formData.city_id" :options="cityOptions"
+          placeholder="Selecione uma                    'city_id' => $validated['city_id'],
+ cidade" :disabled="!selectedStateId" :isError="cityError"
+          errorMessage="Cidade é obrigatória" />
 
         <InputComponent label="Endereço" v-model="formData.address" placeholder="Digite o endereço" type="text"
           :isError="addressError" errorMessage="Endereço inválido" />
@@ -39,11 +43,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType, ref, watch, computed } from 'vue';
+import { defineComponent, type PropType, ref, watch, computed, onMounted } from 'vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import InputComponent from '../components/InputComponent.vue';
 import type { Client, ClientFormData } from '../types/clients';
 import { ClientService } from '../services/clientsService';
+import { locationService } from '../services/statesService';
+import type { State } from '../types/state';
 
 export default defineComponent({
   name: 'ClientFormComponent',
@@ -67,20 +73,51 @@ export default defineComponent({
       city_id: null,
       address: null,
       neighborhood: null,
-
     });
 
+    const stateOptions = ref<Array<{ value: number, text: string }>>([]);
+    const cityOptions = ref<Array<{ value: number, text: string }>>([]);
+    const selectedStateId = ref<number | null>(null);
     const isLoading = ref(false);
     const nameError = ref(false);
     const mobileError = ref(false);
     const emailError = ref(false);
     const birthDateError = ref(false);
-    const cityIdError = ref(false);
+    const cityError = ref(false);
+    const stateError = ref(false);
     const addressError = ref(false);
     const neighborhoodError = ref(false);
+    const loadingCities = ref(false);
 
     const isEditMode = computed(() => !!props.client);
 
+    const loadStates = async () => {
+      try {
+        const states = await locationService.getStates();
+        stateOptions.value = states.map((state: State) => ({
+          value: state.id,
+          text: `${state.name} (${state.uf})`
+        }));
+      } catch (error) {
+        console.error('Erro ao carregar estados:', error);
+      }
+    };
+
+    const loadCities = async (stateId: number) => {
+      try {
+        loadingCities.value = true;
+        cityOptions.value = [];
+        const cities = await locationService.getCitiesByState(stateId);
+        cityOptions.value = cities.map(city => ({
+          value: city.id,
+          text: city.name
+        }));
+      } catch (error) {
+        console.error('Erro ao carregar cidades:', error);
+      } finally {
+        loadingCities.value = false;
+      }
+    };
 
     const resetForm = () => {
       formData.value = {
@@ -91,18 +128,19 @@ export default defineComponent({
         city_id: null,
         address: null,
         neighborhood: null,
-
       };
+      selectedStateId.value = null;
       nameError.value = false;
       mobileError.value = false;
       emailError.value = false;
       birthDateError.value = false;
-      cityIdError.value = false;
+      cityError.value = false;
+      stateError.value = false;
       addressError.value = false;
       neighborhoodError.value = false;
     };
 
-    watch(() => props.client, (newClient) => {
+    watch(() => props.client, async (newClient) => {
       if (newClient) {
         formData.value = {
           id: newClient.id,
@@ -110,16 +148,29 @@ export default defineComponent({
           mobile: newClient.mobile,
           email: newClient.email,
           birth_date: newClient.birth_date,
-          city_id: newClient.city_id ? Number(newClient.city_id) : null,
+          city_id: null,
           address: newClient.address?.address || null,
           neighborhood: newClient.neighborhood || newClient.address?.neighborhood || null,
         };
+
+        if (newClient.address?.city?.state_id) {
+          selectedStateId.value = newClient.address.city.state_id;
+          await loadCities(newClient.address.city.state_id);
+          formData.value.city_id = newClient.address?.city?.state_id;
+        }
       } else {
         resetForm();
       }
     }, { immediate: true });
 
-
+    watch(selectedStateId, (newStateId) => {
+      if (newStateId) {
+        loadCities(newStateId);
+      } else {
+        cityOptions.value = [];
+        formData.value.city_id = null;
+      }
+    });
 
     const validateForm = () => {
       let isValid = true;
@@ -138,27 +189,31 @@ export default defineComponent({
         mobileError.value = false;
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!formData.value.email.trim() || !emailRegex.test(formData.value.email)) {
+      if (!formData.value.email.trim()) {
         emailError.value = true;
         isValid = false;
       } else {
         emailError.value = false;
       }
 
-      if (formData.value.birth_date && !isValidDate(formData.value.birth_date)) {
-        birthDateError.value = true;
+      if (!selectedStateId.value) {
+        stateError.value = true;
         isValid = false;
       } else {
-        birthDateError.value = false;
+        stateError.value = false;
+      }
+
+      if (!formData.value.city_id) {
+        cityError.value = true;
+        isValid = false;
+      } else {
+        cityError.value = false;
       }
 
       return isValid;
     };
 
-    const isValidDate = (dateString: string) => {
-      return !isNaN(Date.parse(dateString));
-    };
+
 
     const handleSubmit = async () => {
       if (!validateForm()) return;
@@ -168,6 +223,7 @@ export default defineComponent({
       try {
         const payload = {
           ...formData.value,
+          state_id: selectedStateId.value
         };
 
         if (isEditMode.value && formData.value.id) {
@@ -189,6 +245,10 @@ export default defineComponent({
       emit('close');
     };
 
+    onMounted(() => {
+      loadStates();
+    });
+
     return {
       formData,
       isLoading,
@@ -196,16 +256,22 @@ export default defineComponent({
       mobileError,
       emailError,
       birthDateError,
-      cityIdError,
+      cityError,
+      stateError,
       addressError,
       neighborhoodError,
       isEditMode,
       handleSubmit,
-      close
+      close,
+      selectedStateId,
+      stateOptions,
+      cityOptions,
+      loadingCities
     };
   }
 });
 </script>
+
 <style scoped>
 .client-form-modal {
   background-color: white;

@@ -24,6 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/states', [StateController::class, 'index']);
+    Route::get('/states/{state_id}/cities', [StateController::class, 'cities']);
+
 
     // Rotas para Cidades
     Route::get('/cities', [CityController::class, 'index']);

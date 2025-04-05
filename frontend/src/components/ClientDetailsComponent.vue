@@ -3,20 +3,16 @@
         <div class="modal-content">
             <div class="header-modal">
 
-
                 <div class="header-name">
                     <span class="initial-client">{{ getInitials(client.name) }}</span>
                     <h2>{{ client.name }}</h2>
                 </div>
-
-
 
                 <div class="header-actions">
                     <img src="../assets/icons/edit.svg" alt="">
                     <img src="../assets/icons/trash.svg" alt="">
                     <img @click="close" src="../assets/icons/close.svg" alt="">
                 </div>
-
 
             </div>
 
