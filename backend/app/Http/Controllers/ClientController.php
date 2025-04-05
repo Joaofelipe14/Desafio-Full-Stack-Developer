@@ -11,10 +11,20 @@ use Exception;
 
 class ClientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Clients::latest()
-            ->paginate(10);
+        $query = Clients::query()->latest();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('mobile', 'like', "%{$search}%");
+            });
+        }
+
+        $clients = $query->paginate(10);
         return response()->json($clients, 200);
     }
 

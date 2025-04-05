@@ -46,7 +46,7 @@ import { defineComponent, type PropType, ref, watch, computed, onMounted } from 
 import ButtonComponent from '../components/ButtonComponent.vue';
 import InputComponent from '../components/InputComponent.vue';
 import type { Client, ClientFormData } from '../types/clients';
-import { ClientService } from '../services/clientsService';
+import { ClientService } from '../services/clientService';
 import { locationService } from '../services/statesService';
 import type { State } from '../types/state';
 

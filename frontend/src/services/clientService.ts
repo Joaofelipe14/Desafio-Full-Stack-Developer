@@ -3,15 +3,17 @@ import api from "./config";
 
 
 export const ClientService = {
-    async getClients(page: number = 1): Promise<PaginatedResponse<Client>> {
-        try {
-      const response = await api.get(`/clients?page=${page}`);
-      return response.data;
-    } catch (error) {
-      throw new Error('Erro ao buscar clientes');
-    }
-  },
+   async getClients(page: number, search?: string): Promise<PaginatedResponse<Client>> {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
 
+    if (search) {
+      params.append('search', search);
+    }
+
+    const response = await api.get(`/clients?${params.toString()}`);
+    return response.data;
+  },
   async getClient(id: number): Promise<Client> {
     try {
       const response = await api.get(`/clients/${id}`);
@@ -21,7 +23,7 @@ export const ClientService = {
     }
   },
 
-  async createClient(clientData:ClientFormData): Promise<Client> {
+  async createClient(clientData: ClientFormData): Promise<Client> {
     try {
       const response = await api.post('/clients', clientData);
       return response.data.data;
@@ -30,7 +32,7 @@ export const ClientService = {
     }
   },
 
-  async updateClient(id: number, clientData:ClientFormData): Promise<Client> {
+  async updateClient(id: number, clientData: ClientFormData): Promise<Client> {
     try {
       const response = await api.put(`/clients/${id}`, clientData);
       return response.data.data;

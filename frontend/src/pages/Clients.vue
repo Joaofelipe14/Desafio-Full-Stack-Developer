@@ -7,10 +7,12 @@
             @close="closeClientDetails" />
         <ClientFormComponent v-if="showClientForm" :client="selectedClient" @close="closeClientForm"
             @success="handleClientSuccess" />
+
         <div class="card">
             <div class="header-card">
                 <div class="input-search">
-                    <InputComponent type="search" v-model="inputValue" placeholder="Buscar contato" />
+                    <InputComponent type="search" v-model="inputValue" placeholder="Buscar contato"
+                        @input="handleSearch" />
                 </div>
 
                 <div class="action-header">
@@ -54,8 +56,11 @@
                 <img src="../assets/image.svg" alt="">
                 <h3>Ainda não há contatos.</h3>
                 <ButtonComponent label="Adicionar contato" :show-icon="true" @click="openClientForm(null)" />
-
             </div>
+
+            <PaginationComponent v-if="clients.data && clients.data.length > 0" :current-page="clients.current_page"
+                :total-pages="clients.last_page" :has-next-page="!!clients.next_page_url"
+                :has-previous-page="!!clients.prev_page_url" @page-change="fetchClients" />
         </div>
 
 
@@ -65,11 +70,11 @@
 <script lang="ts">
 import ButtonComponent from '../components/ButtonComponent.vue';
 import InputComponent from '../components/InputComponent.vue';
-
+import PaginationComponent from '../components/PaginationComponent.vue';
 import ClientDetails from '../components/ClientDetailsComponent.vue';
 import ClientFormComponent from '../components/ClientFormComponent.vue';
 import AuthService from '../services/authService';
-import { ClientService } from '../services/clientsService';
+import { ClientService } from '../services/clientService';
 import type { Client, PaginatedResponse } from '../types/clients';
 import { getInitials } from '../utils/functions'
 
@@ -90,33 +95,59 @@ export default {
             inputValue: "",
             selectedClient: null as Client | null,
             showClientForm: false,
-            showClientDetails: false
+            showClientDetails: false,
+            searchTimeout: null as number | null,
 
         };
-
     },
     async mounted() {
         try {
-            const response = await ClientService.getClients(1);
-            this.clients = response;
-
+            await this.fetchClients(1);
         } catch (error) {
             console.error('Erro ao buscar os clientes:', error);
         }
-
     },
     components: {
         ButtonComponent,
         InputComponent,
         ClientDetails,
-        ClientFormComponent
+        ClientFormComponent,
+        PaginationComponent
     },
     methods: {
         logout() {
-            AuthService.logout()
+            AuthService.logout();
         },
         getInitials,
 
+        async fetchClients(page = 1) {
+            try {
+                const response = await ClientService.getClients(
+                    page,
+                    this.inputValue.trim() || undefined
+                );
+                this.clients = response;
+            } catch (error) {
+                console.error('Erro ao buscar os clientes:', error);
+            }
+        },
+
+        handleSearch() {
+            if (this.searchTimeout) {
+                clearTimeout(this.searchTimeout);
+            }
+
+            console.log(this.searchTimeout)
+            this.searchTimeout = setTimeout(() => {
+                this.fetchClients(1);
+            }, 500);
+
+        },
+        beforeUnmount() {
+            if (this.searchTimeout) {
+                clearTimeout(this.searchTimeout);
+            }
+        },
         async openClientDetails(clientId: number) {
             this.showClientDetails = true;
             try {
@@ -126,13 +157,15 @@ export default {
                 console.error('Erro ao buscar detalhes do cliente:', error);
             }
         },
+
         closeClientDetails() {
             this.selectedClient = null;
+            this.showClientDetails = false;
         },
+
         async openClientForm(clientId: number | null) {
             this.showClientForm = true;
             if (clientId) {
-
                 try {
                     const client = await ClientService.getClient(clientId);
                     this.selectedClient = client;
@@ -140,20 +173,19 @@ export default {
                     console.error('Erro ao buscar detalhes do cliente:', error);
                 }
             } else {
-                this.selectedClient = null
-
+                this.selectedClient = null;
             }
-
-
         },
 
         closeClientForm() {
             this.showClientForm = false;
             this.selectedClient = null;
         },
-
         handleClientSuccess() {
-            //.fetchClients(); // Atualiza a lista após sucesso
+            this.showClientForm = false;
+            this.selectedClient = null;
+            // Atualiza a lista após sucesso, mantendo na mesma página
+            this.fetchClients(this.clients.current_page);
         }
     }
 }
@@ -311,27 +343,6 @@ table tbody tr:hover {
     border-radius: 20px !important;
     transition: ease-in-out 0.3s;
 }
-
-/* 
-th:nth-child(1),
-td:nth-child(1) {
-    width: 40.86%;
-}
-
-th:nth-child(2),
-td:nth-child(2) {
-    width: 30.48%;
-}
-
-th:nth-child(3),
-td:nth-child(3) {
-    width: 19.78%;
-}
-
-th:nth-child(4),
-td:nth-child(4) {
-    width: 7.53%;
-} */
 
 /* Esconde o botão de editar */
 td:last-child {

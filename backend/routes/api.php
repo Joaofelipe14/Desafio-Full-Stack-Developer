@@ -7,6 +7,7 @@ use App\Http\Controllers\CallController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HuggyWebhookController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StateController;
 
 Route::post('/call', [CallController::class, 'initCall']);
@@ -36,4 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/clients/{id}', [ClientController::class, 'show']);
     Route::put('/clients/{id}', [ClientController::class, 'update']);
     Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
+
+    // rota para gráficos 
+    Route::get('/reports/clients-by-city', [ReportController::class, 'clientsByCity']);
+
+
 });

@@ -1,6 +1,6 @@
 <template>
-  <button  class='btn-primary' @click="handleClick" >
-    <img v-if="showIcon"src="../assets/icons/add.svg" alt="Add Icon" class="icon" />
+  <button class='btn-primary' :disabled="disabled" @click="handleClick">
+    <img v-if="showIcon" src="../assets/icons/add.svg" alt="Add Icon" class="icon" />
     {{ label }}
   </button>
 </template>
@@ -16,9 +16,11 @@ export default {
     },
     showIcon: {
       type: Boolean,
-      default: false 
+      default: false
+    },
+    disabled: { type: Boolean, default: false }
+
   },
-},
   methods: {
     handleClick() {
     },
@@ -49,11 +51,12 @@ button {
 
 }
 
-.icon{
+.icon {
   filter: invert(1);
   width: 20px;
   height: 20px;
 }
+
 .btn-primary {
   background-color: var(--persian-blue-600);
   color: var(--white);
@@ -63,8 +66,12 @@ button {
   background-color: var(--persian-blue-300);
 }
 
-
 .btn-primary:focus {
   background-color: var(--persian-blue-700);
+}
+
+.btn-primary:disabled{
+  background-color: var(--mine-shaft-100);
+  cursor: not-allowed;
 }
 </style>
