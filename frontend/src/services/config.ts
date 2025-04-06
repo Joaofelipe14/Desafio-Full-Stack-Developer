@@ -22,8 +22,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
-      console.log(error.response)
+    if (error.response?.status === 401  && error.response.data.message =='Unauthenticated.') {
+
+      window.alert('Sessão expirada, por favor entre novamente.')
+      window.location.href = '/login';
     }
     return Promise.reject(error.response?.data?.message || 'Erro na requisição');
   }

@@ -23,11 +23,9 @@ export const AuthService = {
    * Inicia o fluxo de login com Huggy em uma nova janela
    */
   async loginWithHuggy(): Promise<Window | null> {
-    console.log('Iniciando processo de login com Huggy...');
     const authUrl = `${API_URL}huggy/auth`;
     const windowFeatures = "width=800,height=600,scrollbars=yes";
 
-    console.log('Abrindo janela de autenticação:', authUrl);
     return window.open(authUrl, "_blank", windowFeatures);
   },
 
@@ -42,7 +40,6 @@ export const AuthService = {
     const interval = setInterval(() => {
       try {
         if (authWindow.closed) {
-          console.log('Janela de autenticação foi fechada');
           clearInterval(interval);
 
           const token = this.getToken();
