@@ -115,4 +115,30 @@ button {
   cursor: not-allowed;
   color: var(--mine-shaft-80);
 }
+
+.btn-danger {
+  background-color: var(--white);
+  color: var(--alizarin-crimson-400);
+}
+
+.btn-danger:hover {
+  background-color: var(--alizarin-crimson-10);
+}
+
+.btn-danger:focus {
+  background-color: var(--alizarin-crimson-30);
+  color: var(--alizarin-crimson-500);
+}
+
+.btn-danger:active {
+  background-color: var(--alizarin-crimson-30);
+  color: var(--alizarin-crimson-500);
+
+}
+
+.btn-danger:disabled {
+  background-color: var(--white);
+  cursor: not-allowed;
+  color: var(--mine-shaft-80);
+}
 </style>

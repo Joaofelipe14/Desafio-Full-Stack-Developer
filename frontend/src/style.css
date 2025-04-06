@@ -16,7 +16,12 @@
     --persian-blue-700: #2715B0;
     --persian-blue-800: #180D6E;
 
+
+    --alizarin-crimson-10: rgba(250, 236, 227, 1);
+    --alizarin-crimson-30: rgba(244, 202, 182, 1);
+    --alizarin-crimson-400: rgba(222, 50, 27, 1);
     --alizarin-crimson-500: rgba(173, 34, 19, 1);
+
 
     background-color: var(--mine-shaft-10);
 }

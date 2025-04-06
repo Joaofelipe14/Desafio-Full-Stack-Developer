@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
-import PieChartReport from '../components/PieChartReport.vue';
-import BarChartReport from '../components/BarChartReport.vue';
+import PieChartReport from '../components/PieChartReportComponent.vue';
+import BarChartReport from '../components/BarChartReportComponent.vue';
 import router from '../router';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import { reportService } from '../services/reportService';

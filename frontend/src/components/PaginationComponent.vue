@@ -1,24 +1,24 @@
 <template>
     <div class="pagination" v-if="totalPages > 0">
-        <ButtonComponent class="page-btn" :disabled="!hasPreviousPage" @click="onPageChange(currentPage - 1)"
+        <ButtonComponent :buttonStyle="'btn-secondary'" class="page-btn" :disabled="!hasPreviousPage" @click="onPageChange(currentPage - 1)"
             label="« Anterior" :show-icon="false" />
 
         <div class="page-numbers">
-            <ButtonComponent class="page-number" :class="{ active: currentPage === 1 }" @click="onPageChange(1)"
+            <ButtonComponent  class="page-number" :buttonStyle="'btn-secondary'"  :class="{ active: currentPage === 1 }" @click="onPageChange(1)"
                 label="1" :show-icon="false" />
 
             <h1 v-if="currentPage > 4">...</h1>
-            <ButtonComponent v-for="page in displayedPageNumbers" :key="page" class="page-number"
+            <ButtonComponent v-for="page in displayedPageNumbers" :buttonStyle="'btn-secondary'":key="page" class="page-number"
                 :class="{ active: currentPage === page }" @click="onPageChange(page)" :label="page.toString()"
                 :show-icon="false" />
 
             <h1 v-if="currentPage < totalPages - 3">...</h1>
 
-            <ButtonComponent v-if="totalPages > 1" class="page-number" :class="{ active: currentPage === totalPages }"
+            <ButtonComponent v-if="totalPages > 1" :buttonStyle="'btn-secondary'" class="page-number" :class="{ active: currentPage === totalPages }"
                 @click="onPageChange(totalPages)" :label="totalPages.toString()" :show-icon="false" />
         </div>
 
-        <ButtonComponent class="page-btn" :disabled="!hasNextPage" @click="onPageChange(currentPage + 1)"
+        <ButtonComponent :buttonStyle="'btn-secondary'" class="page-btn" :disabled="!hasNextPage" @click="onPageChange(currentPage + 1)"
             label="Próxima »" :show-icon="false" />
     </div>
 </template>
@@ -96,7 +96,7 @@ export default {
 }
 
 .page-number.active {
-    background-color: var(--persian-blue-700);
+    background-color: var(--mine-shaft-80);
 }
 
 

@@ -5,6 +5,8 @@
 
         <ClientDetails v-if="selectedClient && showClientDetails" :client="selectedClient"
             @close="closeClientDetails" />
+
+        <AlertConfirmModalComponent v-if="showAlertConfirm" @close="handleModalClose" />
         <ClientFormComponent v-if="showClientForm" :client="selectedClient" @close="closeClientForm"
             @success="handleClientSuccess" />
 
@@ -32,10 +34,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- @click="openClientDetails(client.id)" -->
-
-                    <tr class="row-cliente" v-for="client in clients.data" :key="client.id">
-                        <td data-label="Nome" class="name-client">
+                    <tr v-for="client in clients.data" :key="client.id">
+                        <td @click="openClientDetails(client.id)" data-label="Nome" class="name-client">
                             <span class="initial-client">{{ getInitials(client.name) }}</span>
                             {{ client.name }}
                         </td>
@@ -43,12 +43,11 @@
                         <td data-label="Telefone">{{ client.mobile }}</td>
 
                         <td class="action-client">
-                            <img @click="openClientForm(client.id)" src="../assets/icons/edit.svg" alt="">
-                            <img src="../assets/icons/trash.svg" alt="">
-
+                            <img @click.stop="openClientForm(client.id)" src="../assets/icons/edit.svg" alt="">
+                            <img @click.stop="deleteClient(client.id)" src="../assets/icons/trash.svg" alt="">
                         </td>
-
                     </tr>
+
                 </tbody>
             </table>
 
@@ -67,131 +66,149 @@
     </div>
 </template>
 
-<script lang="ts">
-import ButtonComponent from '../components/ButtonComponent.vue';
-import InputComponent from '../components/InputComponent.vue';
-import PaginationComponent from '../components/PaginationComponent.vue';
-import ClientDetails from '../components/ClientDetailsComponent.vue';
-import ClientFormComponent from '../components/ClientFormComponent.vue';
-import AuthService from '../services/authService';
-import { ClientService } from '../services/clientService';
-import type { Client, PaginatedResponse } from '../types/clients';
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
+import ButtonComponent from '../components/ButtonComponent.vue'
+import InputComponent from '../components/InputComponent.vue'
+import PaginationComponent from '../components/PaginationComponent.vue'
+import ClientDetails from '../components/ClientDetailsComponent.vue'
+import ClientFormComponent from '../components/ClientFormComponent.vue'
+import AlertConfirmModalComponent from '../components/AlertConfirmModalComponent.vue'
+import AuthService from '../services/authService'
+import { ClientService } from '../services/clientService'
+import type { Client, PaginatedResponse } from '../types/clients'
 import { getInitials } from '../utils/functions'
-import router from '../router';
 
+const router = useRouter()
 
-export default {
-    name: 'Clients',
-    data() {
-        return {
-            clients: {
-                data: [],
-                current_page: 1,
-                last_page: 1,
-                first_page_url: '',
-                next_page_url: null,
-                prev_page_url: null,
-            } as PaginatedResponse<Client>,
-            textValue: "",
-            inputValue: "",
-            selectedClient: null as Client | null,
-            showClientForm: false,
-            showClientDetails: false,
-            searchTimeout: null as number | null,
+// Reactive state
+const clients = ref<PaginatedResponse<Client>>({
+    data: [],
+    current_page: 1,
+    last_page: 1,
+    first_page_url: '',
+    next_page_url: null,
+    prev_page_url: null,
+})
 
-        };
-    },
-    async mounted() {
-        try {
-            await this.fetchClients(1);
-        } catch (error) {
-            console.error('Erro ao buscar os clientes:', error);
-        }
-    },
-    components: {
-        ButtonComponent,
-        InputComponent,
-        ClientDetails,
-        ClientFormComponent,
-        PaginationComponent
-    },
-    methods: {
-        logout() {
-            AuthService.logout();
-        },
-        getInitials,
+const inputValue = ref('')
+const selectedClient = ref<Client | null>(null)
+const showClientForm = ref(false)
+const showClientDetails = ref(false)
+const showAlertConfirm = ref(false)
+const searchTimeout = ref<number | null>(null)
+const clientToDeleteId = ref<number | null>(null)
 
-        async fetchClients(page = 1) {
-            try {
-                const response = await ClientService.getClients(
-                    page,
-                    this.inputValue.trim() || undefined
-                );
-                this.clients = response;
-            } catch (error) {
-                console.error('Erro ao buscar os clientes:', error);
-            }
-        },
+// Methods
+const logout = () => {
+    AuthService.logout()
+}
 
-        handleSearch() {
-            if (this.searchTimeout) {
-                clearTimeout(this.searchTimeout);
-            }
-
-            console.log(this.searchTimeout)
-            this.searchTimeout = setTimeout(() => {
-                this.fetchClients(1);
-            }, 500);
-
-        },
-        beforeUnmount() {
-            if (this.searchTimeout) {
-                clearTimeout(this.searchTimeout);
-            }
-        },
-        async openClientDetails(clientId: number) {
-            this.showClientDetails = true;
-            try {
-                const client = await ClientService.getClient(clientId);
-                this.selectedClient = client;
-            } catch (error) {
-                console.error('Erro ao buscar detalhes do cliente:', error);
-            }
-        },
-
-        closeClientDetails() {
-            this.selectedClient = null;
-            this.showClientDetails = false;
-        },
-
-        async openClientForm(clientId: number | null) {
-            this.showClientForm = true;
-            if (clientId) {
-                try {
-                    const client = await ClientService.getClient(clientId);
-                    this.selectedClient = client;
-                } catch (error) {
-                    console.error('Erro ao buscar detalhes do cliente:', error);
-                }
-            } else {
-                this.selectedClient = null;
-            }
-        },
-
-        closeClientForm() {
-            this.showClientForm = false;
-            this.selectedClient = null;
-        },
-        handleClientSuccess() {
-            this.showClientForm = false;
-            this.selectedClient = null;
-            this.fetchClients(this.clients.current_page);
-        },
-        redirectToReport() {
-            router.push('/reports');
-        }
+const fetchClients = async (page = 1) => {
+    try {
+        const response = await ClientService.getClients(
+            page,
+            inputValue.value.trim() || undefined
+        )
+        clients.value = response
+    } catch (error) {
+        console.error('Erro ao buscar os clientes:', error)
     }
 }
+
+const handleSearch = () => {
+    if (searchTimeout.value) {
+        clearTimeout(searchTimeout.value)
+    }
+    searchTimeout.value = setTimeout(() => {
+        fetchClients(1)
+    }, 500)
+}
+
+const openClientDetails = async (clientId: number) => {
+    showClientDetails.value = true
+    try {
+        const client = await ClientService.getClient(clientId)
+        selectedClient.value = client
+    } catch (error) {
+        console.error('Erro ao buscar detalhes do cliente:', error)
+    }
+}
+
+const closeClientDetails = () => {
+    selectedClient.value = null
+    showClientDetails.value = false
+}
+
+const handleModalClose = (confirmed: boolean) => {
+    showAlertConfirm.value = false
+
+    if (confirmed && clientToDeleteId.value) {
+        deleteClientConfirmed(clientToDeleteId.value)
+    }
+
+    clientToDeleteId.value = null
+}
+
+const deleteClientConfirmed = async (id: number) => {
+    try {
+        await ClientService.deleteClient(id)
+        fetchClients(clients.value.current_page)
+    } catch (error) {
+        console.error('Erro ao excluir cliente:', error)
+    }
+}
+const openClientForm = async (clientId: number | null) => {
+    showClientForm.value = true
+    if (clientId) {
+        try {
+            const client = await ClientService.getClient(clientId)
+            selectedClient.value = client
+        } catch (error) {
+            console.error('Erro ao buscar detalhes do cliente:', error)
+        }
+    } else {
+        selectedClient.value = null
+    }
+}
+
+const deleteClient = (clientId: number | null) => {
+    showAlertConfirm.value = true
+    clientToDeleteId.value = clientId
+    console.log('ID do cliente para deletar:', clientId)
+}
+
+const closeClientForm = () => {
+    showClientForm.value = false
+    selectedClient.value = null
+}
+
+const handleClientSuccess = () => {
+    showClientForm.value = false
+    selectedClient.value = null
+    fetchClients(clients.value.current_page)
+}
+
+const redirectToReport = () => {
+    router.push('/reports')
+}
+
+// Lifecycle hooks
+onMounted(async () => {
+    try {
+        await fetchClients(1)
+    } catch (error) {
+        console.error('Erro ao buscar os clientes:', error)
+    }
+})
+
+onBeforeUnmount(() => {
+    if (searchTimeout.value) {
+        clearTimeout(searchTimeout.value)
+    }
+})
 </script>
 
 <style scoped>
