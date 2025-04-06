@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
-import Login from '../pages/Login.vue';
+import Login from '../pages/LoginPage.vue';
 import Clients from '../pages/Clients.vue';
-import Home from '../pages/Home.vue';
+import Home from '../pages/HomePage.vue';
 import Reports from '../pages/Reports.vue';
 
 
