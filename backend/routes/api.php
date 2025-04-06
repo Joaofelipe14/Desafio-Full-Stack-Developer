@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // rota para gráficos 
     Route::get('/reports/clients-by-city', [ReportController::class, 'clientsByCity']);
+    Route::get('/reports/clients-by-state', [ReportController::class, 'clientsBystate']);
+    Route::get('/reports/clients-by-age', [ReportController::class, 'clientsByAge']);
 
 
 });

@@ -16,9 +16,9 @@
                 </div>
 
                 <div class="action-header">
-                    <ButtonComponent @click="openClientForm(null)" label="Adicionar contato" :show-icon="true" />
-                    <img title="Clique para acessar os gráficos" class="icon-report" src="../assets/icons/report.svg"
-                        alt="">
+                    <ButtonComponent @click="openClientForm(null)" label="Adicionar contato" :icon="'add'" />
+                    <img @click="redirectToReport()" title="Clique para acessar os gráficos" class="icon-report"
+                        src="../assets/icons/report.svg" alt="">
                 </div>
             </div>
 
@@ -77,6 +77,7 @@ import AuthService from '../services/authService';
 import { ClientService } from '../services/clientService';
 import type { Client, PaginatedResponse } from '../types/clients';
 import { getInitials } from '../utils/functions'
+import router from '../router';
 
 
 export default {
@@ -184,8 +185,10 @@ export default {
         handleClientSuccess() {
             this.showClientForm = false;
             this.selectedClient = null;
-            // Atualiza a lista após sucesso, mantendo na mesma página
             this.fetchClients(this.clients.current_page);
+        },
+        redirectToReport() {
+            router.push('/reports');
         }
     }
 }
