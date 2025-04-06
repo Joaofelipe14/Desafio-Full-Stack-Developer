@@ -1,25 +1,38 @@
 <template>
-  <button class='btn-primary' :disabled="disabled" @click="handleClick">
-    <img v-if="showIcon" src="../assets/icons/add.svg" alt="Add Icon" class="icon" />
+  <button :class="['btn', buttonStyle]" :disabled="disabled" @click="handleClick">
+    <img v-if="icon" :src="iconData.src" :alt="iconData.alt" class="icon" />
     {{ label }}
   </button>
 </template>
 
 <script>
-
-
 export default {
   props: {
     label: {
       type: String,
       default: "Clique Aqui",
     },
-    showIcon: {
-      type: Boolean,
-      default: false
+    icon: {
+      type: String,
+      default: null,
     },
-    disabled: { type: Boolean, default: false }
-
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    buttonStyle: {
+      type: String,
+      default: 'btn-primary',
+    },
+  },
+  computed: {
+    iconData() {
+      const icons = {
+        left: { src: "/src/assets/icons/back-left.svg", alt: "Left Icon" },
+        add: { src: "/src/assets/icons/add.svg", alt: "Add Icon" },
+      };
+      return this.icon ? icons[this.icon] || {} : {};
+    }
   },
   methods: {
     handleClick() {
@@ -28,9 +41,9 @@ export default {
 };
 </script>
 
+
 <style>
 button {
-  display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -39,7 +52,6 @@ button {
   border: none;
   cursor: pointer;
   transition: background-color 0.2s, opacity 0.2s;
-
   /* Button */
   font-style: normal;
   font-weight: 400;
@@ -52,7 +64,6 @@ button {
 }
 
 .icon {
-  filter: invert(1);
   width: 20px;
   height: 20px;
 }
@@ -70,8 +81,38 @@ button {
   background-color: var(--persian-blue-700);
 }
 
-.btn-primary:disabled{
+.btn-primary:active {
+  background-color: var(--persian-blue-700);
+}
+
+.btn-primary:disabled {
   background-color: var(--mine-shaft-100);
   cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--white);
+  color: var(--mine-shaft-400);
+}
+
+.btn-secondary:hover {
+  background-color: var(--mine-shaft-10);
+}
+
+.btn-secondary:focus {
+  background-color: var(--mine-shaft-30);
+  color: var(--mine-shaft-700);
+}
+
+.btn-secondary:active {
+  background-color: var(--mine-shaft-30);
+  color: var(--mine-shaft-700);
+
+}
+
+.btn-secondary:disabled {
+  background-color: var(--white);
+  cursor: not-allowed;
+  color: var(--mine-shaft-80);
 }
 </style>
