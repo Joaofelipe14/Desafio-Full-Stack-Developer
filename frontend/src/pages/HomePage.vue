@@ -47,7 +47,6 @@ export default defineComponent({
         const authWindow = await AuthService.loginWithHuggy();
 
         AuthService.monitorAuthWindow(authWindow, (token) => {
-          console.log('Autenticação Huggy bem-sucedida');
           AuthService.saveToken(token);
           isAuthenticated.value = true;
           router.push('/clients');

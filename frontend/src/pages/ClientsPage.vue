@@ -26,24 +26,29 @@
             <table>
                 <thead>
                     <tr class="caption">
-                        <th>Nome</th>
+                        <th class='th-name' @click="toggleSortByName">
+                            Nome
+                            <img :src="getSortIcon()" alt="Ordenar" title="Orderna por ordem Alfabetica"
+                                class="sorIcon" />
+                        </th>
                         <th>Email</th>
                         <th>Telefone</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="!loading" v-for="client in clients.data" :key="client.id">
-                        <td @click="openClientDetails(client.id)" data-label="Nome" class="name-client">
+                    <tr v-if="!loading" v-for="client in clients.data" :key="client.id"
+                        @click="openClientDetails(client.id)">
+                        <td data-label="Nome" class="name-client">
                             <span class="initial-client">{{ getInitials(client.name) }}</span>
                             {{ client.name }}
                         </td>
                         <td data-label="Email">{{ client.email }}</td>
                         <td data-label="Telefone">{{ client.mobile }}</td>
 
-                        <td class="action-client">
-                            <img @click.stop="openClientForm(client.id)" src="../assets/icons/edit.svg" alt="">
-                            <img @click.stop="deleteClient(client.id)" src="../assets/icons/trash.svg" alt="">
+                        <td class="action-client" @click.stop>
+                            <img @click="openClientForm(client.id)" src="../assets/icons/edit.svg" alt="Editar">
+                            <img @click="deleteClient(client.id)" src="../assets/icons/trash.svg" alt="Excluir">
                         </td>
                     </tr>
 
@@ -100,11 +105,12 @@ const inputValue = ref('')
 const selectedClient = ref<Client | null>(null)
 const showClientForm = ref(false)
 const loading = ref(false)
-
 const showClientDetails = ref(false)
 const showAlertConfirm = ref(false)
 const searchTimeout = ref<number | null>(null)
 const clientToDeleteId = ref<number | null>(null)
+const sortDirection = ref('asc');
+const sortField = ref('name');
 
 const logout = () => {
     AuthService.logout()
@@ -113,12 +119,20 @@ const logout = () => {
 const fetchClients = async (page = 1) => {
     loading.value = true;
     try {
+        const searchTerm = inputValue.value.trim();
         const response = await ClientService.getClients(
             page,
-            inputValue.value.trim() || undefined
-        )
+            searchTerm || undefined
+        );
+
         loading.value = false;
-        clients.value = response
+        clients.value = response;
+        if (searchTerm && (!response.data || response.data.length === 0)) {
+            toast.warning(`Nenhum cliente encontrado para: "${searchTerm}"`, {
+                closeOnClick: true,
+            });
+        }
+
     } catch (error) {
         loading.value = false;
         console.error('Erro ao buscar os clientes:', error)
@@ -222,6 +236,31 @@ const redirectToReport = () => {
     router.push('/reports')
 }
 
+const toggleSortByName = () => {
+    if (sortField.value === 'name') {
+        sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortField.value = 'name';
+        sortDirection.value = 'asc';
+    }
+
+    clients.value.data.sort((a, b) => {
+        const nameA = a.name.toUpperCase();
+        const nameB = b.name.toUpperCase();
+
+        if (sortDirection.value === 'asc') {
+            return nameA.localeCompare(nameB);
+        } else {
+            return nameB.localeCompare(nameA);
+        }
+    });
+};
+
+const getSortIcon = () => {
+    if (sortField.value !== 'name') return '/src/assets/icons/south.svg';
+    return sortDirection.value === 'asc' ? '/src/assets/icons/south.svg' : '/src/assets/icons/north.svg';
+};
+
 // Lifecycle hooks
 onMounted(async () => {
     try {
@@ -256,6 +295,22 @@ h2 {
     margin: 1rem 0;
 }
 
+.sorIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.th-name {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.sorIcon:hover {
+    transform: scale(1.2);
+}
+
 .card {
     background-color: white;
     border: 1px #E1E1E1 solid;
@@ -263,8 +318,6 @@ h2 {
     box-shadow: 0px 1px 2px 0px #00000026;
     height: 90vh;
 }
-
-
 
 .header-card {
     display: flex;
@@ -354,7 +407,6 @@ table th {
 }
 
 table th {
-    width: 100vh;
     position: relative;
 
 }
@@ -395,6 +447,23 @@ table tbody tr:hover {
 /* Esconde o botão de editar */
 td:last-child {
     visibility: hidden;
+}
+
+.sort-arrow {
+    display: inline-block;
+    margin-left: 5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.sort-arrow.asc {
+    border-bottom: 5px solid black;
+}
+
+.sort-arrow.desc {
+    border-top: 5px solid black;
 }
 
 /* Mostrar o botão editar quando a linha estiver sendo "hovered" */
