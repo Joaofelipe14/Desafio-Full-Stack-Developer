@@ -3,10 +3,8 @@
         <h2>Contatos</h2>
         <div class="logout" @click="logout">sair</div>
 
-
-        <ClientDetails v-if="selectedClient && showClientDetails" :client="selectedClient"
-            @close="closeClientDetails" />
-
+        <ClientDetails v-if="selectedClient && showClientDetails" :client="selectedClient" @close="closeClientDetails"
+            @edit="handleEditFromDetails" @delete="handleDeleteFromDetails" />
         <AlertConfirmModalComponent v-if="showAlertConfirm" @close="handleModalClose" />
         <ClientFormComponent v-if="showClientForm" :client="selectedClient" @close="closeClientForm"
             @success="handleClientSuccess" />
@@ -54,7 +52,6 @@
 
             <SpinnerComponent v-if="loading" />
 
-
             <div v-if="clients.data.length === 0 && !loading" class="no-contacts active">
                 <img src="../assets/image.svg" alt="">
                 <h3>Ainda não há contatos.</h3>
@@ -85,6 +82,7 @@ import { ClientService } from '../services/clientService'
 import type { Client, PaginatedResponse } from '../types/clients'
 import { getInitials } from '../utils/functions'
 import SpinnerComponent from '../components/SpinnerComponent.vue'
+import { toast } from 'vue3-toastify'
 
 const router = useRouter()
 
@@ -113,7 +111,6 @@ const logout = () => {
 }
 
 const fetchClients = async (page = 1) => {
-
     loading.value = true;
     try {
         const response = await ClientService.getClients(
@@ -121,11 +118,9 @@ const fetchClients = async (page = 1) => {
             inputValue.value.trim() || undefined
         )
         loading.value = false;
-
         clients.value = response
     } catch (error) {
         loading.value = false;
-
         console.error('Erro ao buscar os clientes:', error)
     }
 }
@@ -160,16 +155,35 @@ const handleModalClose = (confirmed: boolean) => {
     if (confirmed && clientToDeleteId.value) {
         deleteClientConfirmed(clientToDeleteId.value)
     }
-
     clientToDeleteId.value = null
 
 }
 
+const handleEditFromDetails = (clientId: number) => {
+    closeClientDetails()
+    openClientForm(clientId)
+}
+
+const handleDeleteFromDetails = (clientId: number) => {
+    closeClientDetails()
+    deleteClient(clientId)
+}
 const deleteClientConfirmed = async (id: number) => {
     try {
         await ClientService.deleteClient(id)
+        toast.success('Cliente deletado com sucesso.',
+            {
+                transition: 'zoom',
+                dangerouslyHTMLString: true,
+            }
+        );
         fetchClients(clients.value.current_page)
     } catch (error) {
+        toast("Houve um erro ao deletar cliente!", {
+            "type": "error",
+            "transition": "zoom",
+            "dangerouslyHTMLString": true
+        })
         console.error('Erro ao excluir cliente:', error)
     }
 }
@@ -211,7 +225,7 @@ const redirectToReport = () => {
 // Lifecycle hooks
 onMounted(async () => {
     try {
-        
+
         await fetchClients(1)
     } catch (error) {
         console.error('Erro ao buscar os clientes:', error)
@@ -477,8 +491,6 @@ tr:hover td:last-child {
         letter-spacing: 0.4px;
         color: var(--mine-shaft-700);
     }
-
-
 
 
 }

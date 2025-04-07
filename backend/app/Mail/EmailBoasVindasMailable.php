@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Models\Clients;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Clients;
 
 class EmailBoasVindasMailable extends Mailable
 {

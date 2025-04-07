@@ -9,9 +9,9 @@
                 </div>
 
                 <div class="header-actions">
-                    <img src="../assets/icons/edit.svg" alt="">
-                    <img src="../assets/icons/trash.svg" alt="">
-                    <img @click="close" src="../assets/icons/close.svg" alt="">
+                    <img @click="handleEdit" src="../assets/icons/edit.svg" alt="Editar">
+                    <img @click="handleDelete" src="../assets/icons/trash.svg" alt="Excluir">
+                    <img @click="close" src="../assets/icons/close.svg" alt="Fechar">
                 </div>
 
             </div>
@@ -59,7 +59,13 @@ export default {
         close() {
             this.$emit('close');
         },
-        getInitials
+        getInitials,
+        handleEdit() {
+            this.$emit('edit', this.client.id);
+        },
+        handleDelete() {
+            this.$emit('delete', this.client.id);
+        }
     }
 
 };
@@ -170,5 +176,11 @@ p {
     line-height: 18px;
     color: var(--mine-shaft-700);
     text-align: left;
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        width: 80%;
+    }
 }
 </style>

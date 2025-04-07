@@ -9,38 +9,43 @@
         <InputComponent label="Nome" v-model="formData.name" placeholder="Digite o nome do cliente" type="text"
           :isError="nameError" errorMessage="Nome é obrigatório" required />
 
-        <InputComponent label="Email" v-model="formData.email" placeholder="Digite seu email" type="email"
-          :isError="emailError" errorMessage="Email inválido" required />
+        <div class="row-fields">
+          <InputComponent label="Email" v-model="formData.email" placeholder="Digite seu email" type="email"
+            :isError="emailError" errorMessage="Email inválido" required />
 
-        <InputComponent label="Celular" v-model="formData.mobile" placeholder="Digite o número de celular" type="tel"
-          :isError="mobileError" errorMessage="Celular inválido" required />
+          <InputComponent label="Celular" v-model="formData.mobile" placeholder="Digite o número de celular" type="tel"
+            :isError="mobileError" errorMessage="Celular inválido" required />
+        </div>
 
         <InputComponent label="Data de Nascimento" v-model="formData.birth_date"
           placeholder="Digite a data de nascimento" type="date" :isError="birthDateError"
           errorMessage="Data inválida" />
 
-        <InputComponent type="select" label="Estado" v-model="selectedStateId" :options="stateOptions"
-          placeholder="Selecione um estado" :isError="stateError" errorMessage="Estado é obrigatório" />
+        <div class="row-fields">
+          <InputComponent type="select" label="Estado" v-model="selectedStateId" :options="stateOptions"
+            placeholder="Selecione um estado" :isError="stateError" errorMessage="Estado é obrigatório" />
 
-        <InputComponent type="select" label="Cidade" v-model="formData.city_id" :options="cityOptions"
-          placeholder="Selecione uma cidade" :disabled="!selectedStateId" :isError="cityError"
-          errorMessage="Cidade é obrigatória" />
+          <InputComponent type="select" label="Cidade" v-model="formData.city_id" :options="cityOptions"
+            placeholder="Selecione uma cidade" :disabled="!selectedStateId" :isError="cityError"
+            errorMessage="Cidade é obrigatória" />
+        </div>
 
-        <InputComponent label="Endereço" v-model="formData.address" placeholder="Digite o endereço" type="text"
-          :isError="addressError" errorMessage="Endereço inválido" />
+        <div class="row-fields">
+          <InputComponent label="Endereço" v-model="formData.address" placeholder="Digite o endereço" type="text"
+            :isError="addressError" errorMessage="Endereço inválido" />
 
-        <InputComponent label="Bairro" v-model="formData.neighborhood" placeholder="Digite o bairro" type="text"
-          :isError="neighborhoodError" errorMessage="Bairro inválido" />
+          <InputComponent label="Bairro" v-model="formData.neighborhood" placeholder="Digite o bairro" type="text"
+            :isError="neighborhoodError" errorMessage="Bairro inválido" />
+        </div>
       </div>
 
       <div class="footer-modal">
-        <ButtonComponent :label="isEditMode ? 'Atualizar' : 'Cadastrar'" @click="handleSubmit" :loading="isLoading" />
-        <ButtonComponent label="Cancelar" @click="close" variant="secondary" />
+        <ButtonComponent label="Cancelar" @click="close" :buttonStyle="'btn-secondary'" />
+        <ButtonComponent :label="isEditMode ? 'Atualizar' : 'Salvar'" @click="handleSubmit" :loading="isLoading" />
       </div>
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import { defineComponent, type PropType, ref, watch, computed, onMounted } from 'vue';
 import ButtonComponent from '../components/ButtonComponent.vue';
@@ -328,6 +333,15 @@ export default defineComponent({
   flex-direction: column;
 }
 
+.row-fields {
+  display: flex;
+  gap: 16px;
+}
+
+.row-fields>* {
+  flex: 1;
+}
+
 .footer-modal {
   display: flex;
   justify-content: flex-end;
@@ -335,6 +349,12 @@ export default defineComponent({
   position: relative;
   padding: 16px 0px;
   margin-top: 24px;
+}
+
+
+
+.content-modal {
+  gap: 12px;
 }
 
 .footer-modal::after {
@@ -358,5 +378,17 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   z-index: 9999;
+}
+
+@media (max-width: 600px) {
+  .row-fields {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+  }
+
+  .client-form-modal {
+    width: 80%;
+  }
 }
 </style>

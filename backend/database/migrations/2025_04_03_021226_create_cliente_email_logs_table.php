@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->cascadeOnDelete();
             $table->string('type');
-            $table->string('status');
+            $table->texto('status');
             $table->timestamp('sent_in');
             $table->timestamps();
         });

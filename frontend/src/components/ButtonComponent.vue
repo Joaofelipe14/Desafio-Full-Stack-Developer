@@ -131,7 +131,7 @@ button {
 }
 
 .btn-danger:active {
-  background-color: var(--alizarin-crimson-30);
+  background-color: var(--alizarin-crimson-0);
   color: var(--alizarin-crimson-500);
 
 }

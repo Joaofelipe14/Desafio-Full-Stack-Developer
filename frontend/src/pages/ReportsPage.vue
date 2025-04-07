@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <h2>Dados sobre contato</h2>
-    <div class="logout" @click="logout">Sair
 
-    </div>
 
     <div class="card">
       <div class="header-card">
@@ -96,12 +94,8 @@ export default {
       }
     };
 
-    const logout = () => {
-      console.log('Saindo...');
-    };
-
     const redirectToClient = () => {
-      router.push('/reports');
+      router.push('/clients');
     };
 
     onMounted(() => {
@@ -113,7 +107,6 @@ export default {
       stateChartData,
       ageChartData,
       loading,
-      logout,
       redirectToClient
     };
   }

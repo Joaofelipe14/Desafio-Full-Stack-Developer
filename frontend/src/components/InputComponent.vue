@@ -54,10 +54,10 @@ export default {
 
 .icon-search {
     position: absolute;
-    margin-left: 5px;
-    width: 20px;
-    height: 20px;
-    margin-top: 13px;
+    margin-left: 10px;
+    width: 15px;
+    height: 15px;
+    margin-top: 16px;
 }
 
 .padding-input {
