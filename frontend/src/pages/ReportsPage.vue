@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <h2>Dados sobre contato</h2>
-    <div class="logout" @click="logout">Sair</div>
+    <div class="logout" @click="logout">Sair
+
+    </div>
 
     <div class="card">
       <div class="header-card">
@@ -9,14 +11,11 @@
       </div>
 
       <div class="charts-container">
+        <SpinnerComponent v-if="loading" />
+
         <PieChartReport v-if="!loading" title="Segmentação por estado" :chartData="stateChartData" />
-        <div v-else class="loading-placeholder">Carregando dados...</div>
-
         <PieChartReport v-if="!loading" title="Segmentação por cidade" :chartData="cityChartData" />
-        <div v-else class="loading-placeholder">Carregando dados...</div>
-
         <BarChartReport v-if="!loading" title="Segmentação por idade" :chartData="ageChartData" :horizontal="false" />
-        <div v-else class="loading-placeholder">Carregando dados...</div>
       </div>
     </div>
   </div>
@@ -28,13 +27,15 @@ import PieChartReport from '../components/PieChartReportComponent.vue';
 import BarChartReport from '../components/BarChartReportComponent.vue';
 import router from '../router';
 import ButtonComponent from '../components/ButtonComponent.vue';
+import SpinnerComponent from '../components/SpinnerComponent.vue';
 import { reportService } from '../services/reportService';
 
 export default {
   components: {
     PieChartReport,
     BarChartReport,
-    ButtonComponent
+    ButtonComponent,
+    SpinnerComponent, 
   },
   setup() {
     const cityChartData = ref({
@@ -134,26 +135,9 @@ export default {
   padding: 16px;
 }
 
-
-.loading-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  color: #757575;
-}
-
-.logout {
-  cursor: pointer;
-  top: 10px;
-  right: 50%;
-  position: absolute;
-}
-
 .charts-container{
   display: flex;
   flex-direction: column;
-  /* gap: 60px; */
 }
 
 .header-card {
@@ -163,4 +147,12 @@ export default {
 h2 {
   margin: 1rem 0;
 }
+
+.logout {
+  cursor: pointer;
+  top: 10px;
+  right: 50%;
+  position: absolute;
+}
+
 </style>

@@ -49,6 +49,7 @@ import type { Client, ClientFormData } from '../types/clients';
 import { ClientService } from '../services/clientService';
 import { locationService } from '../services/statesService';
 import type { State } from '../types/state';
+import { toast } from 'vue3-toastify';
 
 export default defineComponent({
   name: 'ClientFormComponent',
@@ -231,9 +232,22 @@ export default defineComponent({
           await ClientService.createClient(payload);
         }
 
+        toast.success(
+          `Cliente ${isEditMode.value ? 'atualizado' : 'cadastrado'} com sucesso!`,
+          {
+            transition: 'zoom',
+            dangerouslyHTMLString: true,
+          }
+        );
+
         emit('success');
         close();
       } catch (error) {
+        toast("Houve um erro ao processar a operação!", {
+          "type": "error",
+          "transition": "zoom",
+          "dangerouslyHTMLString": true
+        })
         console.error('Erro ao salvar cliente:', error);
       } finally {
         isLoading.value = false;
@@ -282,22 +296,22 @@ export default defineComponent({
 }
 
 .header-modal::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: -20px;
-    right: -20px;
-    height: 1px;
-    background-color: var(--mine-shaft-30);
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background-color: var(--mine-shaft-30);
 }
 
 .header-modal {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding-bottom: 20px;
 }
 
 .close-button {
@@ -324,13 +338,13 @@ export default defineComponent({
 }
 
 .footer-modal::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -20px;
-    right: -20px;
-    height: 1px;
-    background-color: var(--mine-shaft-30);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background-color: var(--mine-shaft-30);
 }
 
 .modal {

@@ -3,6 +3,7 @@
         <h2>Contatos</h2>
         <div class="logout" @click="logout">sair</div>
 
+
         <ClientDetails v-if="selectedClient && showClientDetails" :client="selectedClient"
             @close="closeClientDetails" />
 
@@ -34,7 +35,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="client in clients.data" :key="client.id">
+                    <tr v-if="!loading" v-for="client in clients.data" :key="client.id">
                         <td @click="openClientDetails(client.id)" data-label="Nome" class="name-client">
                             <span class="initial-client">{{ getInitials(client.name) }}</span>
                             {{ client.name }}
@@ -51,13 +52,16 @@
                 </tbody>
             </table>
 
-            <div v-if="clients.data && clients.data.length === 0" class="no-contacts active">
+            <SpinnerComponent v-if="loading" />
+
+
+            <div v-if="clients.data.length === 0 && !loading" class="no-contacts active">
                 <img src="../assets/image.svg" alt="">
                 <h3>Ainda não há contatos.</h3>
                 <ButtonComponent label="Adicionar contato" :show-icon="true" @click="openClientForm(null)" />
             </div>
 
-            <PaginationComponent v-if="clients.data && clients.data.length > 0" :current-page="clients.current_page"
+            <PaginationComponent v-if="!loading && clients.data.length > 0" :current-page="clients.current_page"
                 :total-pages="clients.last_page" :has-next-page="!!clients.next_page_url"
                 :has-previous-page="!!clients.prev_page_url" @page-change="fetchClients" />
         </div>
@@ -80,6 +84,7 @@ import AuthService from '../services/authService'
 import { ClientService } from '../services/clientService'
 import type { Client, PaginatedResponse } from '../types/clients'
 import { getInitials } from '../utils/functions'
+import SpinnerComponent from '../components/SpinnerComponent.vue'
 
 const router = useRouter()
 
@@ -96,24 +101,31 @@ const clients = ref<PaginatedResponse<Client>>({
 const inputValue = ref('')
 const selectedClient = ref<Client | null>(null)
 const showClientForm = ref(false)
+const loading = ref(false)
+
 const showClientDetails = ref(false)
 const showAlertConfirm = ref(false)
 const searchTimeout = ref<number | null>(null)
 const clientToDeleteId = ref<number | null>(null)
 
-// Methods
 const logout = () => {
     AuthService.logout()
 }
 
 const fetchClients = async (page = 1) => {
+
+    loading.value = true;
     try {
         const response = await ClientService.getClients(
             page,
             inputValue.value.trim() || undefined
         )
+        loading.value = false;
+
         clients.value = response
     } catch (error) {
+        loading.value = false;
+
         console.error('Erro ao buscar os clientes:', error)
     }
 }
@@ -150,6 +162,7 @@ const handleModalClose = (confirmed: boolean) => {
     }
 
     clientToDeleteId.value = null
+
 }
 
 const deleteClientConfirmed = async (id: number) => {
@@ -198,6 +211,7 @@ const redirectToReport = () => {
 // Lifecycle hooks
 onMounted(async () => {
     try {
+        
         await fetchClients(1)
     } catch (error) {
         console.error('Erro ao buscar os clientes:', error)
