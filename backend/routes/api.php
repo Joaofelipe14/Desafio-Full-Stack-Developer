@@ -9,9 +9,13 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HuggyWebhookController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StateController;
+use Twilio\Jwt\AccessToken;
+use Twilio\Jwt\Grants\VoiceGrant;
 
-Route::post('/call', [CallController::class, 'initCall']);
-Route::get('/twilio/connect', [CallController::class, 'connectUsers'])->name('twilio.connect');
+use App\Http\Controllers\TwilioController;
+
+Route::post('/make-call', [TwilioController::class, 'Call']);  
+
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/huggy/auth', [HuggyAuthController::class, 'redirectToHuggy']);
@@ -44,4 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/clients-by-age', [ReportController::class, 'clientsByAge']);
 
 
+
 });
+

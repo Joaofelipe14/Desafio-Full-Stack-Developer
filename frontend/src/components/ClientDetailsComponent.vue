@@ -9,9 +9,10 @@
                 </div>
 
                 <div class="header-actions">
-                    <img @click="handleEdit" src="../assets/icons/edit.svg" alt="Editar">
-                    <img @click="handleDelete" src="../assets/icons/trash.svg" alt="Excluir">
-                    <img @click="close" src="../assets/icons/close.svg" alt="Fechar">
+                    <img @click="handleCall" class="" src="../assets/icons/call.svg" alt="Ligar" title="Ligar agora!">
+                    <img @click="handleEdit" src="../assets/icons/edit.svg" alt="Editar" title="Editar informações">
+                    <img @click="handleDelete" src="../assets/icons/trash.svg" alt="Excluir" title="Excluir este item">
+                    <img @click="close" src="../assets/icons/close.svg" alt="Fechar" title="Fechar janela">
                 </div>
 
             </div>
@@ -43,6 +44,8 @@
 </template>
 
 <script lang="ts">
+import { toast } from 'vue3-toastify';
+import { twilioService } from '../services/twilioService';
 import type { Client } from '../types/clients';
 import { getInitials } from '../utils/functions'
 
@@ -65,6 +68,30 @@ export default {
         },
         handleDelete() {
             this.$emit('delete', this.client.id);
+        },
+        async handleCall() {
+            if (!this.client?.mobile) {
+                toast?.error("Número do cliente inválido!", {
+                    transition: 'zoom'
+                });
+                return;
+            }
+
+            await toast.promise(
+                twilioService.makeCall(this.client.mobile),
+                {
+                    pending: `Iniciando chamada para ${this.client.mobile}`,
+                    success: `Chamada conectada para ${this.client.mobile}!`,
+                    error: `Falha ao chamar ${this.client.mobile}`
+                },
+                {
+                    transition: 'zoom',
+                    position: 'top-right',
+                    hideProgressBar: false
+                }
+            ).catch(error => {
+                console.error("Erro detalhado:", error);
+            });
         }
     }
 
@@ -136,7 +163,7 @@ export default {
 }
 
 .header-actions img:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
     cursor: pointer;
 }
 

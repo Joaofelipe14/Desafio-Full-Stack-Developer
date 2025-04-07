@@ -65,7 +65,7 @@ class ClientController extends Controller
             ]);
 
             EnviarEmailBoasVindasJob::dispatch($cliente)
-                ->delay(now()->addMinutes(2));
+                ->delay(now()->addMinutes(30));
 
             DB::commit();
 
@@ -124,14 +124,13 @@ class ClientController extends Controller
                 $address = Address::updateOrCreate(
                     ['id' => $addressId],
                     [
-                        'address' => $validated['address'] ?? $cliente->address->address,
-                        'neighborhood' => $validated['neighborhood'] ?? $cliente->address->neighborhood,
-                        'city_id' => $validated['city_id'] ?? $cliente->address->city_id
+                        'address' => $validated['address'] ?? $cliente->address?->address,
+                        'neighborhood' => $validated['neighborhood'] ?? $cliente->address?->neighborhood,
+                        'city_id' => $validated['city_id'] ?? $cliente->address?->city_id
                     ]
                 );
                 $addressId = $address->id;
             }
-
             $cliente->update([
                 'name' => $validated['name'] ?? $cliente->name,
                 'mobile' => $validated['mobile'] ?? $cliente->mobile,
