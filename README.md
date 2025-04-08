@@ -15,7 +15,7 @@ Aplicação Full-Stack para gestão de clientes integrando Huggy (webhook e logi
 | Envio de e-mail de boas-vindas (job + delay de 30 min)    | Implementado ✅ |
 | Integração com Twilio para ligações VoIP                  | Implementado ✅ |
 | Relatórios com gráficos (cidade, idade, etc.)             | Implementado ✅ |
-| Autenticação segura                                        | Implementado ✅ |
+| Autenticação laravel sanctum                               | Implementado ✅ |
 | Validação de dados (frontend/backend)                     | Implementado ✅ |
 | Busca, cadastro, edição e exclusão de clientes (UI)       | Implementado ✅ |
 | Botão de ligação para clientes com telefone               | Implementado ✅ |
@@ -30,8 +30,6 @@ Aplicação Full-Stack para gestão de clientes integrando Huggy (webhook e logi
 | Paginação de clientes                       | Implementada na API e no frontend         |
 | Integração com login da Huggy               | Autenticação usando API Huggy             |
 | Gráficos por faixa etária                   | Utilizando ApexCharts                     |
-| Componentização com Vue 3                   | UI 100% modular com componentes           |
-| Confirmação visual de exclusão              | Modal com alerta antes de excluir cliente |
 
 ---
 
@@ -46,9 +44,9 @@ php artisan key:generate
 php artisan migrate
 php artisan db:seed
 php artisan serve
-php artisan queue:work --tries=3 --delay=10 --sleep=3 --verbose
+php artisan queue:work --tries=3 --delay=10 --sleep=3 --verbose ## em outro terminal
 ```
-Obs: Certifique-se configurar as variaveis de ambiente corretamente
+Obs: Certifique-se configurar as [variáveis de Ambiente](https://github.com/Joaofelipe14/Desafio-Full-Stack-Developer/tree/main/backend#readme) corretamente.
 
 ### Frontend (Vue)
 
@@ -60,15 +58,11 @@ npm run dev
 
 ---
 
-## 📮 Documentação da API
+## 📮 Documentação da API🌐 Acessar a Collection no Postman
 
-[📫 Acessar Collection no Postman](COLE_AQUI_A_URL_DA_COLLECTION)
+Para facilitar a integração e testes, você pode acessar a [collection da API no Postman]((https://documenter.getpostman.com/view/19891823/2sB2cUAiAs)). Lá você encontrará todas as rotas documentadas e configuradas para testes rápidos.
 
 ---
-
-## 🗂 Estrutura de Pastas
-
-### 📦 Backend (Laravel)
 
 ## 🗂 Estrutura de Pastas
 
@@ -88,11 +82,11 @@ npm run dev
 
 ---
 
-### 🖥️ Frontend (Vue 3 + Vite + TypeScript)
+### 🖥️ Frontend (Vue 3  + TypeScript)
 
 | Pasta/Arquivo             | Descrição                                                        |
 |--------------------------|------------------------------------------------------------------|
-| `src/components`          | Componentes reutilizáveis (form, modais, gráficos, botões, etc.) |
+| `src/components`          | Componentes reutilizáveis (form, modais, gráficos, botões.) |
 | `src/pages`               | Páginas principais da aplicação (Login, Clientes, Relatórios)    |
 | `src/router`              | Arquivo de rotas da aplicação                                   |
 | `src/services`            | Comunicação com backend, com a api                       |
