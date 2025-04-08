@@ -1,8 +1,16 @@
-php artisan key:generate
-php artisan migrate
-php artisan db:seed
-php artisan queue:failed
-php artisan queue:retry all
-php artisan queue:work --tries=3 --delay=10 --sleep=3 --verbose
+Variáveis de Ambiente:
+Mail (Gmail SMTP): Para enviar e-mails automáticos.
 
-sudo docker run --net=host -it -e NGROK_AUTHTOKEN=2lOUWFQSMbQzRKNulty26KUtNP9_7EmMQQmEou8CX8Aq6txU1 ngrok/ngrok:latest http 8000
+MAIL_*: Configurações SMTP do Gmail.
+
+Huggy (OAuth2): Para login com Huggy.
+
+HUGGY_*: Configurações de OAuth2 do Huggy.
+
+Supabase: Para armazenar arquivos (imagens/docs).
+
+SUPABASE_*: URL e chave da API do Supabase.
+
+Twilio: Para fazer ligações.
+
+TWILIO_*: SID, token e número de telefone do Twilio.
