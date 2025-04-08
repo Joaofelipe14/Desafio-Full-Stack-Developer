@@ -95,6 +95,20 @@ h3 {
     min-width: 32px;
 }
 
+.avatar-container {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
+  }
+  
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+
 .sub2 {
     font-style: normal;
     font-weight: 500;

@@ -4,7 +4,11 @@
             <div class="header-modal">
 
                 <div class="header-name">
-                    <span class="initial-client">{{ getInitials(client.name) }}</span>
+                    <div class="avatar-container">
+                        <img v-if="client.url_perfil" :src="client.url_perfil" alt="Foto do cliente"
+                            class="profile-image">
+                        <span v-else class="initial-client">{{ getInitials(client.name) }}</span>
+                    </div>
                     <h2>{{ client.name }}</h2>
                 </div>
 
@@ -115,7 +119,6 @@ export default {
 
 .modal-content {
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
     max-width: 610px;
     width: 100%;
@@ -128,8 +131,8 @@ export default {
     content: '';
     position: absolute;
     bottom: 0;
-    left: -20px;
-    right: -20px;
+    left: 0px;
+    right: 0px;
     height: 1px;
     background-color: var(--mine-shaft-30);
 }
@@ -140,13 +143,15 @@ export default {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    padding-bottom: 20px;
+
+    padding: 24px;
 }
 
 .header-name {
     display: flex;
     flex-direction: row;
     gap: 5px;
+    align-items: center;
 }
 
 .header-actions {
@@ -191,7 +196,7 @@ export default {
     letter-spacing: 0.4px;
     color: var(--mine-shaft-100);
     text-align: right;
-    min-width: 57px;
+    min-width: 90px;
 
 }
 
@@ -207,7 +212,13 @@ p {
 
 @media (max-width: 600px) {
     .modal-content {
-        width: 80%;
+        width: 90%;
+    }
+
+    .info-line span {
+
+        min-width: auto;
+
     }
 }
 </style>

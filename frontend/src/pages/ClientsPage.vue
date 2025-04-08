@@ -40,8 +40,11 @@
                     <tr v-if="!loading" v-for="client in clients.data" :key="client.id"
                         @click="openClientDetails(client.id)">
                         <td data-label="Nome" class="name-client">
-                            <span class="initial-client">{{ getInitials(client.name) }}</span>
-                            {{ client.name }}
+                            <div class="avatar-container">
+                                <img v-if="client.url_perfil" :src="client.url_perfil" alt="Foto do cliente"
+                                    class="profile-image">
+                                <span v-else class="initial-client">{{ getInitials(client.name) }}</span>
+                            </div> {{ client.name }}
                         </td>
                         <td data-label="Email">{{ client.email }}</td>
                         <td data-label="Telefone">{{ client.mobile }}</td>
@@ -316,7 +319,7 @@ h2 {
     border: 1px #E1E1E1 solid;
     border-radius: 1rem;
     box-shadow: 0px 1px 2px 0px #00000026;
-    height: 90vh;
+    min-height: 90vh;
 }
 
 .header-card {
@@ -352,6 +355,7 @@ table {
     border-spacing: 0;
     padding: 8px;
 }
+
 
 .no-contacts {
     justify-content: center;

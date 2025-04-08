@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\SupabaseStorage;
 use App\Jobs\EnviarEmailBoasVindasJob;
 use App\Models\Address;
 use App\Models\Clients;
@@ -42,9 +43,11 @@ class ClientController extends Controller
                 'city_id' => 'nullable|exists:cities,id',
                 'address' => 'nullable|string|max:255',
                 'neighborhood' => 'nullable|string|max:255',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             $addressId = null;
+            $urlPerfil = null;
 
 
             if (!empty($validated['city_id'])) {
@@ -56,12 +59,26 @@ class ClientController extends Controller
                 $addressId = $address->id;
             }
 
+
+            
+
+            if ($request->hasFile('avatar')) {
+                $file = $request->file('avatar');
+                $supabase = new SupabaseStorage();
+                $folder = 'profiles';
+                $urlPerfil = $supabase->uploadImage($file, $folder);
+
+            }
+
+
             $cliente = Clients::create([
                 'name' => $validated['name'],
                 'mobile' => $validated['mobile'],
                 'email' => $validated['email'],
                 'birth_date' => $validated['birth_date'],
                 'address_id' => $addressId,
+                'url_perfil' => $urlPerfil,
+
             ]);
 
             EnviarEmailBoasVindasJob::dispatch($cliente)
@@ -79,7 +96,6 @@ class ClientController extends Controller
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return response()->json(['status' => 'error', 'message' => 'Erro inesperado'], 500);
         }
     }
@@ -115,10 +131,27 @@ class ClientController extends Controller
                 'city_id' => 'nullable|exists:cities,id',
                 'address' => 'nullable|string|max:255',
                 'neighborhood' => 'nullable|string|max:255',
+                'avatar' => 'nullable',
             ]);
 
             $addressId = $cliente->address_id;
+            $urlPerfil = $cliente->url_perfil;
 
+
+
+            if ($request->hasFile('avatar')) {
+
+                $supabase = new SupabaseStorage();
+
+                // Deleta a imagem antiga se existir
+                if ($cliente->url_perfil) {
+                    $supabase->deleteImage($cliente->url_perfil);
+                }
+
+                $file = $request->file('avatar');
+                $folder = 'profiles';
+                $urlPerfil = $supabase->uploadImage($file, $folder);
+            }
 
             if (!empty($addressId) || !empty($validated['city_id'])) {
                 $address = Address::updateOrCreate(
@@ -137,6 +170,8 @@ class ClientController extends Controller
                 'email' => $validated['email'] ?? $cliente->email,
                 'birth_date' => $validated['birth_date'] ?? $cliente->birth_date,
                 'address_id' => $addressId,
+                'url_perfil' => $urlPerfil,
+
             ]);
 
             DB::commit();
@@ -153,7 +188,6 @@ class ClientController extends Controller
             return response()->json(['status' => 'error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             return response()->json(['status' => 'error', 'message' => 'Erro inesperado'], 500);
         }
     }

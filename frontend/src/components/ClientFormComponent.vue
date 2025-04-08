@@ -6,6 +6,17 @@
       </div>
 
       <div class="content-modal">
+
+        <div class="avatar-upload">
+          <div class="avatar-preview" :style="{ backgroundImage: `url(${previewImage || formData.url_perfil})` }">
+            <label for="avatar-upload" class="upload-label">
+              <span v-if="!previewImage && !formData.url_perfil">+</span>
+              <input id="avatar-upload" type="file" accept="image/*" @change="handleImageUpload" class="upload-input" />
+            </label>
+          </div>
+          <p class="avatar-hint">Clique para adicionar foto</p>
+        </div>
+
         <InputComponent label="Nome" v-model="formData.name" placeholder="Digite o nome do cliente" type="text"
           :isError="nameError" errorMessage="Nome é obrigatório" required />
 
@@ -78,6 +89,8 @@ export default defineComponent({
       city_id: null,
       address: null,
       neighborhood: null,
+      url_perfil: '',
+      avatar: null
     });
 
     const stateOptions = ref<Array<{ value: number, text: string }>>([]);
@@ -93,6 +106,8 @@ export default defineComponent({
     const addressError = ref(false);
     const neighborhoodError = ref(false);
     const loadingCities = ref(false);
+    const previewImage = ref<string | null>(null);
+
 
     const isEditMode = computed(() => !!props.client);
 
@@ -121,6 +136,14 @@ export default defineComponent({
         console.error('Erro ao carregar cidades:', error);
       } finally {
         loadingCities.value = false;
+      }
+    };
+
+    const handleImageUpload = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files[0]) {
+        formData.value.avatar = input.files[0];
+        previewImage.value = URL.createObjectURL(input.files[0]);
       }
     };
 
@@ -156,6 +179,8 @@ export default defineComponent({
           city_id: null,
           address: newClient.address?.address || null,
           neighborhood: newClient.neighborhood || newClient.address?.neighborhood || null,
+          url_perfil: newClient.url_perfil
+
         };
 
         if (newClient.address?.city?.state_id) {
@@ -284,7 +309,9 @@ export default defineComponent({
       selectedStateId,
       stateOptions,
       cityOptions,
-      loadingCities
+      loadingCities,
+      previewImage,
+      handleImageUpload
     };
   }
 });
@@ -293,7 +320,7 @@ export default defineComponent({
 <style scoped>
 .client-form-modal {
   background-color: white;
-  padding: 24px 20px 0px 20px;
+  /* padding: 24px 20px 0px 20px; */
   border-radius: 8px;
   max-width: 610px;
   width: 100%;
@@ -304,8 +331,8 @@ export default defineComponent({
   content: '';
   position: absolute;
   bottom: 0;
-  left: -20px;
-  right: -20px;
+  left: 0px;
+  right: 0px;
   height: 1px;
   background-color: var(--mine-shaft-30);
 }
@@ -316,7 +343,8 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   position: relative;
-  padding-bottom: 20px;
+  padding: 24px;
+  /* padding-bottom: 20px; */
 }
 
 .close-button {
@@ -327,8 +355,9 @@ export default defineComponent({
 }
 
 .content-modal {
-  padding-top: 24px;
+  /* padding-top: 24px; */
   gap: 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
 }
@@ -347,22 +376,16 @@ export default defineComponent({
   justify-content: flex-end;
   gap: 10px;
   position: relative;
-  padding: 16px 0px;
-  margin-top: 24px;
+  padding: 16px;
 }
 
-
-
-.content-modal {
-  gap: 12px;
-}
 
 .footer-modal::after {
   content: '';
   position: absolute;
   top: 0;
-  left: -20px;
-  right: -20px;
+  left: 0px;
+  right: 0px;
   height: 1px;
   background-color: var(--mine-shaft-30);
 }
@@ -380,6 +403,48 @@ export default defineComponent({
   z-index: 9999;
 }
 
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-preview {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  cursor: pointer;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #666;
+}
+
+.upload-label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.upload-input {
+  display: none;
+}
+
+.avatar-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
 @media (max-width: 600px) {
   .row-fields {
     display: flex;
@@ -387,8 +452,11 @@ export default defineComponent({
     flex-direction: column;
   }
 
+
   .client-form-modal {
-    width: 80%;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
   }
 }
 </style>

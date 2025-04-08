@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="pie-chart-wrapper">
     <h2 class="sub2">{{ title }}</h2>
     <div class="chart-container">
-      <Pie :data="processedChartData" :options="chartOptions" />
+      <Pie :data="processedChartData" :options="dynamicChartOptions" />
     </div>
   </div>
 </template>
@@ -34,13 +34,13 @@ export default {
   data() {
     return {
       loading: true,
-      chartOptions: {
+      isMobile: false,
+      baseChartOptions: {
         responsive: true,
         maintainAspectRatio: false,
         layout: {
           padding: {
             right: 5,
-            bottom: 100 // Adiciona espaço entre a legenda e o gráfico
           }
         },
         plugins: {
@@ -54,6 +54,7 @@ export default {
               },
               color: '#757575',
               usePointStyle: true,
+              padding: 20
             }
           },
           tooltip: {
@@ -72,6 +73,16 @@ export default {
     };
   },
   computed: {
+    dynamicChartOptions() {
+      const options = JSON.parse(JSON.stringify(this.baseChartOptions));
+      
+      if (this.isMobile) {
+        options.plugins.legend.position = 'bottom';
+        options.layout.padding.bottom = 100;
+      }
+      
+      return options;
+    },
     processedChartData() {
       if (!this.chartData) return null;
       
@@ -84,33 +95,48 @@ export default {
       };
     }
   },
-  watch: {
-    chartData: {
-      handler(newData) {
-        if (newData?.labels?.length > 0) {
-          this.loading = false;
-        }
-      },
-      immediate: true
+  mounted() {
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkScreenSize);
+  },
+  methods: {
+    checkScreenSize() {
+      this.isMobile = window.innerWidth <= 756;
     }
   }
 };
 </script>
 
 <style scoped>
-h2{
-    margin-bottom: 32px;
-}
-div {
+.pie-chart-wrapper {
   max-width: 800px;
 }
 
-.chart-container {
-  height: 250px; 
-  margin-top: 10px;
+h2.sub2 {
+  text-align: left;
+  margin-bottom: 32px;
+  padding-left: 40px;
 }
 
-.sub2 {
-  text-align: left; 
+.chart-container {
+  height: 250px;
+  width: calc(100% + 60px);
+  margin-left: -60px;
+}
+
+@media (max-width: 756px) {
+  .chart-container {
+    height: 500px; 
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  h2.sub2 {
+    padding-left: 0;
+    text-align: center;
+  }
 }
 </style>

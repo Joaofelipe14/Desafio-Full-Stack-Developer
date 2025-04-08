@@ -21,8 +21,8 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
-import PieChartReport from '../components/PieChartReportComponent.vue';
-import BarChartReport from '../components/BarChartReportComponent.vue';
+import PieChartReport from '../components/Reports/PieChartReportComponent.vue';
+import BarChartReport from '../components/Reports/BarChartReportComponent.vue';
 import router from '../router';
 import ButtonComponent from '../components/ButtonComponent.vue';
 import SpinnerComponent from '../components/SpinnerComponent.vue';
@@ -125,12 +125,13 @@ export default {
   border-radius: 1rem;
   box-shadow: 0px 1px 2px 0px #00000026;
   min-height: 90vh;
-  padding: 16px;
 }
 
 .charts-container{
   display: flex;
   flex-direction: column;
+  padding: 24px 56px;
+  gap: 60px;
 }
 
 .header-card {

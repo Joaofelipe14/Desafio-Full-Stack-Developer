@@ -3,7 +3,7 @@ import api from "./config";
 
 
 export const ClientService = {
-   async getClients(page: number, search?: string): Promise<PaginatedResponse<Client>> {
+  async getClients(page: number, search?: string): Promise<PaginatedResponse<Client>> {
     const params = new URLSearchParams();
     params.append('page', page.toString());
 
@@ -25,8 +25,13 @@ export const ClientService = {
 
   async createClient(clientData: ClientFormData): Promise<Client> {
     try {
-      const response = await api.post('/clients', clientData);
-      return response.data.data;
+  
+
+      const response = await api.post('/clients', clientData,{
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }); return response.data.data;
     } catch (error) {
       throw new Error('Erro ao criar cliente');
     }
@@ -34,7 +39,12 @@ export const ClientService = {
 
   async updateClient(id: number, clientData: ClientFormData): Promise<Client> {
     try {
-      const response = await api.put(`/clients/${id}`, clientData);
+
+      const response = await api.post(`/clients/${id}`, clientData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       return response.data.data;
     } catch (error) {
       throw new Error('Erro ao atualizar cliente');

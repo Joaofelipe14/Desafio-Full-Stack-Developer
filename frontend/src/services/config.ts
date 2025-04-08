@@ -26,6 +26,7 @@ api.interceptors.response.use(
 
       window.alert('Sessão expirada, por favor entre novamente.')
       window.location.href = '/login';
+      localStorage.removeItem(import.meta.env.VITE_AUTH_TOKEN_KEY);
     }
     return Promise.reject(error.response?.data?.message || 'Erro na requisição');
   }

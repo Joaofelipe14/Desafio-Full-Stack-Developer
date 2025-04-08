@@ -40,4 +40,6 @@ export interface ClientFormData {
     address: string | null;
     neighborhood: string | null;
     city_id: number | null;
+    avatar?: File | null;
+    url_perfil?: string;
 }
