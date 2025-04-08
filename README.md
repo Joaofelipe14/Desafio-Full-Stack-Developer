@@ -58,9 +58,9 @@ npm run dev
 
 ---
 
-## 📮 Documentação da API🌐 Acessar a Collection no Postman
+## 🌐 Acessar a Collection no Postman
 
-Para facilitar a integração e testes, você pode acessar a [collection da API no Postman]((https://documenter.getpostman.com/view/19891823/2sB2cUAiAs)). Lá você encontrará todas as rotas documentadas e configuradas para testes rápidos.
+Para facilitar a integração e testes, você pode acessar a [collection da API no Postman](https://documenter.getpostman.com/view/19891823/2sB2cUAiAs). Lá você encontrará todas as rotas documentadas e configuradas para testes rápidos.
 
 ---
 
