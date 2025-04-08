@@ -14,7 +14,7 @@ import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } f
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 const DEFAULT_COLORS = [
-  '#060321', '#180D6E', '#271580', '#321BDE', '#5946E4', 
+  '#060321', '#180D6E', '#271580', '#321BDE', '#5946E4',
   '#7E6FEA', '#9F94EF', '#BD85F4', '#DAD6F9', '#F8F7FD'
 ];
 
@@ -40,8 +40,9 @@ export default {
         maintainAspectRatio: false,
         layout: {
           padding: {
-            right: 5,
-          }
+            right: 250,
+          },
+
         },
         plugins: {
           legend: {
@@ -54,38 +55,31 @@ export default {
               },
               color: '#757575',
               usePointStyle: true,
-              padding: 20
+              padding: 10
             }
           },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                const label = context.label || '';
-                const value = context.raw || 0;
-                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                const percentage = Math.round((value / total) * 100);
-                return `${label}: ${value} (${percentage}%)`;
-              }
-            }
-          }
-        }
+
+        },
+
       }
     };
   },
   computed: {
     dynamicChartOptions() {
       const options = JSON.parse(JSON.stringify(this.baseChartOptions));
-      
+
       if (this.isMobile) {
         options.plugins.legend.position = 'bottom';
         options.layout.padding.bottom = 100;
+        options.layout.padding.right = 0;
+
       }
-      
+
       return options;
     },
     processedChartData() {
       if (!this.chartData) return null;
-      
+
       return {
         ...this.chartData,
         datasets: this.chartData.datasets.map(dataset => ({
@@ -123,20 +117,20 @@ h2.sub2 {
 
 .chart-container {
   height: 250px;
-  width: calc(100% + 60px);
-  margin-left: -60px;
+  width: 100%
 }
 
 @media (max-width: 756px) {
   .chart-container {
-    height: 500px; 
+    height: 500px;
     width: 100%;
     margin-left: 0;
   }
-  
+
   h2.sub2 {
     padding-left: 0;
     text-align: center;
   }
 }
+
 </style>

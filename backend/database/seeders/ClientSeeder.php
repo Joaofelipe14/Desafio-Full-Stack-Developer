@@ -24,7 +24,7 @@ class ClientSeeder extends Seeder
 
             Clients::create([
                 'name' => $faker->name,
-                'url_perfil' => $faker->imageUrl(200, 200, 'people'),
+                'url_perfil' => '',
                 'mobile' => $faker->areaCode() . '9' . $faker->numerify('########'),
                 'email' => $faker->unique()->email,
                 'birth_date' => $faker->date(),

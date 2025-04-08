@@ -58,9 +58,9 @@ export default {
         const response = await AuthService.login(loginData);
         router.push('/clients');
 
-        if(response.user){
-          alert(response.token)
-        }
+        // if(response.user){
+        //   alert(response.token)
+        // }
       } catch (error: any) {
         console.log('Erro no login:', error.message);
         alert(error.message)

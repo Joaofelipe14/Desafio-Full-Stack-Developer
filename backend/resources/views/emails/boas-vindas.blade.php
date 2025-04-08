@@ -9,8 +9,7 @@
     
     <p>Detalhes do seu cadastro:</p>
     <ul>
-        <li><strong>CPF:</strong> {{ $cliente->cpf }}</li>
-        <li><strong>Data de Nascimento:</strong></li>
+        <li><strong>contato:</strong> {{ $cliente->mobile }}</li>
     </ul>
 
     <p>Estamos felizes em tê-lo como nosso cliente! 🚀</p>

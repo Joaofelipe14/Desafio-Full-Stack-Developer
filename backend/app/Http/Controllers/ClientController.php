@@ -59,9 +59,6 @@ class ClientController extends Controller
                 $addressId = $address->id;
             }
 
-
-            
-
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $supabase = new SupabaseStorage();

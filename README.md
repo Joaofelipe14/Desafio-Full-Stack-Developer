@@ -38,6 +38,7 @@ Aplicação Full-Stack para gestão de clientes integrando Huggy (webhook e logi
 ### Backend (Laravel)
 
 ```bash
+cd backend
 composer install
 cp .env.example .env
 php artisan key:generate

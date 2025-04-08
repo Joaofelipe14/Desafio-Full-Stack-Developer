@@ -52,7 +52,7 @@
 
       <div class="footer-modal">
         <ButtonComponent label="Cancelar" @click="close" :buttonStyle="'btn-secondary'" />
-        <ButtonComponent :label="isEditMode ? 'Atualizar' : 'Salvar'" @click="handleSubmit" :loading="isLoading" />
+        <ButtonComponent :label="isEditMode ? 'Atualizar' : 'Salvar'" @click="handleSubmit" :disabled="isLoading" />
       </div>
     </div>
   </div>
@@ -255,29 +255,42 @@ export default defineComponent({
           ...formData.value,
           state_id: selectedStateId.value
         };
-
         if (isEditMode.value && formData.value.id) {
-          await ClientService.updateClient(formData.value.id, payload);
+          await toast.promise(
+            ClientService.updateClient(formData.value.id, payload),
+            {
+              pending: 'Atualizando cliente...',
+              success: 'Cliente atualizado com sucesso!',
+              error: 'Erro ao atualizar cliente'
+            },
+            {
+              transition: 'zoom',
+              position: 'top-right',
+              hideProgressBar: false
+            }
+          );
         } else {
-          await ClientService.createClient(payload);
+          await toast.promise(
+            ClientService.createClient(payload),
+            {
+              pending: 'Criando cliente...',
+              success: 'Cliente criado com sucesso!',
+              error: 'Erro ao criar cliente'
+            },
+            {
+              transition: 'zoom',
+              position: 'top-right',
+              hideProgressBar: false
+            }
+          );
         }
 
-        toast.success(
-          `Cliente ${isEditMode.value ? 'atualizado' : 'cadastrado'} com sucesso!`,
-          {
-            transition: 'zoom',
-            dangerouslyHTMLString: true,
-          }
-        );
+
 
         emit('success');
         close();
       } catch (error) {
-        toast("Houve um erro ao processar a operação!", {
-          "type": "error",
-          "transition": "zoom",
-          "dangerouslyHTMLString": true
-        })
+
         console.error('Erro ao salvar cliente:', error);
       } finally {
         isLoading.value = false;

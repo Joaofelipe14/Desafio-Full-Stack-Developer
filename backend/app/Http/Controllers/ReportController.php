@@ -54,6 +54,7 @@ class ReportController extends Controller
     {
         $distribution = Clients::selectRaw(
             'CASE 
+            WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) < 18 THEN "Menor de 18"
             WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 18 AND 25 THEN "18-25"
             WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 26 AND 35 THEN "26-35"
             WHEN TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) BETWEEN 36 AND 45 THEN "36-45"
